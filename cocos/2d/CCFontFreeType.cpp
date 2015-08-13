@@ -47,7 +47,7 @@ typedef struct _DataRef
     unsigned int referenceCount;
 }DataRef;
 
-static std::unordered_map<std::string, DataRef> s_cacheFontData;
+static std::unordered_map<std::string, DataRef>* s_cacheFontData = nullptr;
 
 FontFreeType * FontFreeType::create(const std::string &fontName, float fontSize, GlyphCollection glyphs, const char *customGlyphs,bool distanceFieldEnabled /* = false */,float outline /* = 0 */)
 {
@@ -74,7 +74,10 @@ bool FontFreeType::initFreeType()
         // begin freetype
         if (FT_Init_FreeType( &_FTlibrary ))
             return false;
-        
+
+        CCASSERT( s_cacheFontData == nullptr,
+                  "FontFreeType::initFreeType > s_cacheFontData already initialized" );
+        s_cacheFontData = new std::unordered_map<std::string, DataRef>();
         _FTInitialized = true;
     }
     
@@ -85,8 +88,11 @@ void FontFreeType::shutdownFreeType()
 {
     if (_FTInitialized == true)
     {
+        CCASSERT( s_cacheFontData != nullptr,
+                  "FontFreeType::initFreeType > s_cacheFontData not initialized" );
+        delete s_cacheFontData;
+        s_cacheFontData = nullptr;
         FT_Done_FreeType(_FTlibrary);
-        s_cacheFontData.clear();
         _FTInitialized = false;
     }
 }
@@ -107,6 +113,9 @@ FontFreeType::FontFreeType(bool distanceFieldEnabled /* = false */, float outlin
 , _encoding(FT_ENCODING_UNICODE)
 , _usedGlyphs(GlyphCollection::ASCII)
 {
+    // ensure free type is initialized
+    initFreeType();
+
     if (outline > 0.0f)
     {
         _outlineSize = outline * CC_CONTENT_SCALE_FACTOR();
@@ -125,23 +134,23 @@ bool FontFreeType::createFontObject(const std::string &fontName, float fontSize)
     // save font name locally
     _fontName = fontName;
 
-    auto it = s_cacheFontData.find(fontName);
-    if (it != s_cacheFontData.end())
+    auto it = s_cacheFontData->find(fontName);
+    if (it != s_cacheFontData->end())
     {
         (*it).second.referenceCount += 1;
     }
     else
     {
-        s_cacheFontData[fontName].referenceCount = 1;
-        s_cacheFontData[fontName].data = FileUtils::getInstance()->getDataFromFile(fontName);    
+        (*s_cacheFontData)[fontName].referenceCount = 1;
+        (*s_cacheFontData)[fontName].data = FileUtils::getInstance()->getDataFromFile(fontName);    
 
-        if (s_cacheFontData[fontName].data.isNull())
+        if ((*s_cacheFontData)[fontName].data.isNull())
         {
             return false;
         }
     }
 
-    if (FT_New_Memory_Face(getFTLibrary(), s_cacheFontData[fontName].data.getBytes(), s_cacheFontData[fontName].data.getSize(), 0, &face ))
+    if (FT_New_Memory_Face(getFTLibrary(), (*s_cacheFontData)[fontName].data.getBytes(), (*s_cacheFontData)[fontName].data.getSize(), 0, &face ))
         return false;
 
     if (FT_Select_Charmap(face, FT_ENCODING_UNICODE))
@@ -196,13 +205,13 @@ FontFreeType::~FontFreeType()
         }
     }
 
-    auto iter = s_cacheFontData.find(_fontName);
-    if (iter != s_cacheFontData.end())
+    auto iter = s_cacheFontData->find(_fontName);
+    if (iter != s_cacheFontData->end())
     {
         iter->second.referenceCount -= 1;
         if (iter->second.referenceCount == 0)
         {
-            s_cacheFontData.erase(iter);
+            s_cacheFontData->erase(iter);
         }
     }
 }
@@ -654,11 +663,11 @@ const char* FontFreeType::getGlyphCollection() const
 
 void FontFreeType::releaseFont(const std::string &fontName)
 {
-    auto item = s_cacheFontData.begin();
-    while (s_cacheFontData.end() != item)
+    auto item = s_cacheFontData->begin();
+    while (s_cacheFontData->end() != item)
     {
         if (item->first.find(fontName) != std::string::npos)
-            item = s_cacheFontData.erase(item);
+            item = s_cacheFontData->erase(item);
         else
             item++;
     }
