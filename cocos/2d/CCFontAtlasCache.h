@@ -41,6 +41,9 @@ struct _ttfConfig;
 class CC_DLL FontAtlasCache
 {  
 public:
+    static void initialize();
+    static void finalize();
+
     static FontAtlas* getFontAtlasTTF(const _ttfConfig* config);
     static FontAtlas* getFontAtlasFNT(const std::string& fontFileName, const Vec2& imageOffset = Vec2::ZERO);
 
@@ -68,7 +71,7 @@ public:
     static void unloadFontAtlasTTF(const std::string& fontFileName);
 
 private:
-    static std::unordered_map<std::string, FontAtlas *> _atlasMap;
+    static std::unordered_map<std::string, FontAtlas *>* _atlasMap;
 };
 
 NS_CC_END
