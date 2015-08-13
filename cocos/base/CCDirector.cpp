@@ -174,8 +174,11 @@ bool Director::init(void)
     initTextureCache();
     initMatrixStack();
 
+
     _renderer = new (std::nothrow) Renderer;
     RenderState::initialize();
+
+    FontAtlasCache::initialize();
 
     return true;
 }
@@ -1061,7 +1064,8 @@ void Director::reset()
     // purge bitmap cache
     FontFNT::purgeCachedData();
     FontAtlasCache::purgeCachedData();
-    
+    FontAtlasCache::finalize();
+
     FontFreeType::shutdownFreeType();
     
     // purge all managed caches
