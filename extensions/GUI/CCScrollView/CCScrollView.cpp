@@ -130,6 +130,7 @@ bool ScrollView::initWithViewSize(Size size, Node *container/* = nullptr*/)
         //_container->setContentSize(Size::ZERO);
         _direction  = Direction::BOTH;
         _container->setPosition(0.0f, 0.0f);
+        _container->setCascadeOpacityEnabled( true );
         _touchLength = 0.0f;
         
         this->addChild(_container);
