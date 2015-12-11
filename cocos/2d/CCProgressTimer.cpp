@@ -240,6 +240,14 @@ const Color3B& ProgressTimer::getColor() const
     return _sprite->getColor();
 }
 
+void ProgressTimer::updateDisplayedOpacity(GLubyte parentOpacity)
+{
+    Node::updateDisplayedOpacity( parentOpacity );
+
+    if ( _cascadeOpacityEnabled )
+        _sprite->updateDisplayedOpacity( _displayedOpacity );
+}
+
 void ProgressTimer::setOpacity(GLubyte opacity)
 {
     _sprite->setOpacity(opacity);
