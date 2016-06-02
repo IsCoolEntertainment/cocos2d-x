@@ -25,6 +25,7 @@
 
 #include "CCScrollView.h"
 #include "platform/CCDevice.h"
+#include "2d/CCActionEase.h"
 #include "2d/CCActionInstant.h"
 #include "2d/CCActionInterval.h"
 #include "2d/CCActionTween.h"
@@ -36,9 +37,11 @@
 
 NS_CC_EXT_BEGIN
 
-#define SCROLL_DEACCEL_RATE  0.95f
-#define SCROLL_DEACCEL_DIST  1.0f
+#define SCROLL_DEACCEL_RATE  0.97f
+#define SCROLL_DEACCEL_DIST  0.2f
+#define SCROLL_DEACCEL_DELAY_MS  500
 #define BOUNCE_DURATION      0.15f
+#define BOUNCE_SPEED         800.f
 #define INSET_RATIO          0.2f
 #define MOVE_INCH            7.0f/160.0f
 #define BOUNCE_BACK_FACTOR   0.35f
@@ -215,19 +218,15 @@ bool ScrollView::isScrolling() const
 
     return ( ( fabsf( _scrollDistance.x ) > SCROLL_DEACCEL_DIST )
              || ( fabsf( _scrollDistance.y ) > SCROLL_DEACCEL_DIST ) )
-      && ( ( _direction != Direction::BOTH )
-           && ( _direction != Direction::VERTICAL )
-           || ( minInset.y < position.y ) && ( position.y < maxInset.y ) )
-      && ( ( _direction != Direction::BOTH )
-           && ( _direction != Direction::HORIZONTAL )
-           || ( minInset.x < position.x ) && ( position.x < maxInset.x ) );
+        && ( minInset.y < position.y ) && ( position.y < maxInset.y )
+        && ( minInset.x < position.x ) && ( position.x < maxInset.x );
 }
 
 void ScrollView::setContentOffset(Vec2 offset, bool animated/* = false*/)
 {
     if (animated)
     { //animate scrolling
-        this->setContentOffsetInDuration(offset, BOUNCE_DURATION);
+        this->setContentOffsetAtSpeed(offset, BOUNCE_SPEED);
     } 
     else
     { //set the container position directly
@@ -251,20 +250,31 @@ void ScrollView::setContentOffset(Vec2 offset, bool animated/* = false*/)
 
 void ScrollView::setContentOffsetInDuration(Vec2 offset, float dt)
 {
-    FiniteTimeAction *scroll, *expire;
-    
     if (_animatedScrollAction) {
         stopAnimatedContentOffset();
     }
-    scroll = MoveTo::create(dt, offset);
-    expire = CallFuncN::create(CC_CALLBACK_1(ScrollView::stoppedAnimatedScroll,this));
-    _animatedScrollAction = _container->runAction(Sequence::create(scroll, expire, nullptr));
+
+    FiniteTimeAction* const scroll
+        ( EaseCircleActionOut::create( MoveTo::create( dt, offset ) ) );
+    FiniteTimeAction* const expire
+        ( CallFuncN::create
+          ( CC_CALLBACK_1(ScrollView::stoppedAnimatedScroll, this) ) );
+
+    _animatedScrollAction =
+      _container->runAction(Sequence::create(scroll, expire, nullptr));
     _animatedScrollAction->retain();
     this->schedule(CC_SCHEDULE_SELECTOR(ScrollView::performedAnimatedScroll));
 }
 
+void ScrollView::setContentOffsetAtSpeed(Vec2 offset, float speed)
+{
+    const Vec2 delta( offset - getContentOffset() );
+    setContentOffsetInDuration
+        ( offset, MAX( std::abs( delta.x ), std::abs( delta.y ) ) / speed );
+}
+
 void ScrollView::stopAnimatedContentOffset() {
-    stopAction(_animatedScrollAction);
+    _container->stopAction(_animatedScrollAction);
     _animatedScrollAction->release();
     _animatedScrollAction = nullptr;
     stoppedAnimatedScroll(this);
@@ -451,7 +461,15 @@ void ScrollView::deaccelerateScrolling(float /*dt*/)
     newX = _container->getPosition().x;
     newY = _container->getPosition().y;
     
-    _scrollDistance     = _scrollDistance * SCROLL_DEACCEL_RATE;
+    _scrollDistance *= SCROLL_DEACCEL_RATE;
+
+    const Vec2 minOffset( minContainerOffset() );
+    const Vec2 maxOffset( maxContainerOffset() );
+    
+    if ( ( newX > maxOffset.x ) || ( newX < minOffset.x )
+         || ( newY > maxOffset.y ) || ( newY < minOffset.y ) )
+        _scrollDistance *= SCROLL_DEACCEL_RATE;
+
     this->setContentOffset(Vec2(newX,newY));
     
     if ( !isScrolling() )
@@ -725,6 +743,10 @@ bool ScrollView::onTouchBegan(Touch* touch, Event* /*event*/)
         _dragging     = true; //dragging started
         _scrollDistance.setZero();
         _touchLength    = 0.0f;
+
+        if (_animatedScrollAction) {
+          stopAnimatedContentOffset();
+        }
     }
     else if (_touches.size() == 2)
     {
@@ -748,6 +770,10 @@ void ScrollView::onTouchMoved(Touch* touch, Event* /*event*/)
 
     if (std::find(_touches.begin(), _touches.end(), touch) != _touches.end())
     {
+        _moveDate =
+            std::chrono::duration_cast< std::chrono::milliseconds >
+            ( std::chrono::system_clock::now().time_since_epoch() );
+        
         if (_touches.size() == 1 && _dragging)
         { // scrolling
             Vec2 moveDistance, newPoint;
@@ -846,10 +872,24 @@ void ScrollView::onTouchEnded(Touch* touch, Event* /*event*/)
     
     if (touchIter != _touches.end())
     {
-        if (_touches.size() == 1 && _touchMoved)
-        {
-            this->schedule(CC_SCHEDULE_SELECTOR(ScrollView::deaccelerateScrolling));
-        }
+        if ( _touches.size() == 1 )
+         {
+            if ( _touchMoved )
+            {
+                const std::chrono::milliseconds now
+                    ( std::chrono::duration_cast< std::chrono::milliseconds >
+                      ( std::chrono::system_clock::now().time_since_epoch() ) );
+
+                if ( (now - _moveDate).count() < SCROLL_DEACCEL_DELAY_MS )
+                    this->schedule
+                        ( CC_SCHEDULE_SELECTOR
+                          ( ScrollView::deaccelerateScrolling ) );
+                else
+                    relocateContainer( true );
+            }
+            else
+                relocateContainer( true );
+         }
         _touches.erase(touchIter);
     } 
 
