@@ -33,6 +33,8 @@
 #include "extensions/ExtensionMacros.h"
 #include "extensions/ExtensionExport.h"
 
+#include <chrono>
+
 /**
  * @addtogroup ui
  * @{
@@ -129,6 +131,7 @@ public:
      * @param dt        The animation duration.
      */
     void setContentOffsetInDuration(Vec2 offset, float dt); 
+    void setContentOffsetAtSpeed(Vec2 offset, float speed);
     /**
      * Halts the movement animation of the inner content started with setContentOffset() or setContentOffsetInDuration()
      */
@@ -368,6 +371,10 @@ protected:
      * Touch objects to detect multitouch
      */
     std::vector<Touch*> _touches;
+    /**
+     * The date of the last touch move event.
+     */
+    std::chrono::milliseconds _moveDate;
     /**
      * size to clip. Node boundingBox uses contentSize directly.
      * It's semantically different what it actually means to common scroll views.
