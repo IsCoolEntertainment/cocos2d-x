@@ -216,6 +216,22 @@ void ScrollView::setSwallowTouches(bool needSwallow)
     }
 }
 
+bool ScrollView::isScrolling() const
+{
+    const Vec2 position( _container->getPosition() );
+    const Vec2 minInset( getMinInset() );
+    const Vec2 maxInset( getMaxInset() );
+
+    return ( ( fabsf( _scrollDistance.x ) > SCROLL_DEACCEL_DIST )
+             || ( fabsf( _scrollDistance.y ) > SCROLL_DEACCEL_DIST ) )
+      && ( ( _direction != Direction::BOTH )
+           && ( _direction != Direction::VERTICAL )
+           || ( minInset.y < position.y ) && ( position.y < maxInset.y ) )
+      && ( ( _direction != Direction::BOTH )
+           && ( _direction != Direction::HORIZONTAL )
+           || ( minInset.x < position.x ) && ( position.x < maxInset.x ) );
+}
+
 void ScrollView::setContentOffset(Vec2 offset, bool animated/* = false*/)
 {
     if (animated)
@@ -409,7 +425,7 @@ void ScrollView::relocateContainer(bool animated)
     }
 }
 
-Vec2 ScrollView::maxContainerOffset()
+Vec2 ScrollView::maxContainerOffset() const
 {
     Point anchorPoint = _container->isIgnoreAnchorPointForPosition()?Point::ZERO:_container->getAnchorPoint();
     float contW       = _container->getContentSize().width * _container->getScaleX();
@@ -418,7 +434,7 @@ Vec2 ScrollView::maxContainerOffset()
     return Vec2(anchorPoint.x * contW, anchorPoint.y * contH);
 }
 
-Vec2 ScrollView::minContainerOffset()
+Vec2 ScrollView::minContainerOffset() const
 {
     Point anchorPoint = _container->isIgnoreAnchorPointForPosition()?Point::ZERO:_container->getAnchorPoint();
     float contW       = _container->getContentSize().width * _container->getScaleX();
@@ -436,20 +452,10 @@ void ScrollView::deaccelerateScrolling(float /*dt*/)
     }
     
     float newX, newY;
-    Vec2 maxInset, minInset;
+    const Vec2 maxInset( getMaxInset() );
+    const Vec2 minInset( getMinInset() );
     
     _container->setPosition(_container->getPosition() + _scrollDistance);
-    
-    if (_bounceable)
-    {
-        maxInset = _maxInset;
-        minInset = _minInset;
-    }
-    else
-    {
-        maxInset = this->maxContainerOffset();
-        minInset = this->minContainerOffset();
-    }
     
     newX = _container->getPosition().x;
     newY = _container->getPosition().y;
@@ -457,10 +463,7 @@ void ScrollView::deaccelerateScrolling(float /*dt*/)
     _scrollDistance     = _scrollDistance * SCROLL_DEACCEL_RATE;
     this->setContentOffset(Vec2(newX,newY));
     
-    if ((fabsf(_scrollDistance.x) <= SCROLL_DEACCEL_DIST &&
-         fabsf(_scrollDistance.y) <= SCROLL_DEACCEL_DIST) ||
-        ((_direction == Direction::BOTH || _direction == Direction::VERTICAL) && (newY >= maxInset.y || newY <= minInset.y)) ||
-        ((_direction == Direction::BOTH || _direction == Direction::HORIZONTAL) && (newX >= maxInset.x || newX <= minInset.x)))
+    if ( !isScrolling() )
     {
         this->unschedule(CC_SCHEDULE_SELECTOR(ScrollView::deaccelerateScrolling));
         this->relocateContainer(true);
@@ -491,6 +494,15 @@ void ScrollView::performedAnimatedScroll(float /*dt*/)
     }
 }
 
+Vec2 ScrollView::getMinInset() const
+{
+    return _bounceable ? _minInset : minContainerOffset();
+}
+
+Vec2 ScrollView::getMaxInset() const
+{
+    return _bounceable ? _maxInset : maxContainerOffset();
+}
 
 const Size& ScrollView::getContentSize() const
 {
