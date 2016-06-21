@@ -232,6 +232,12 @@ public:
     VerticalFillOrder getVerticalFillOrder();
 
     /**
+     * Updates the position of all cells, the TableView size and view offset.
+     *
+     */
+    void updateView();
+
+    /**
      * Updates the content of the cell at a given index.
      *
      * @param idx index to find a cell
