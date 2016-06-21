@@ -182,6 +182,26 @@ void TableView::updateCellAtIndex(ssize_t idx)
     this->_addCellIfNecessary(cell);
 }
 
+void TableView::updateView()
+{
+    _updateCellPositions();
+    _updateContentSize();
+
+    const std::size_t count
+        ( _dataSource->numberOfCellsInTableView( this ) );
+    for( std::size_t index( 0 ); index != count; ++index )
+    {
+        TableViewCell* const cell = cellAtIndex( index );
+        if( cell != nullptr )
+        {
+            assert( std::size_t( cell->getIdx() ) == index );
+            cell->setPosition( _offsetFromIndex( index ) );
+        }
+    }
+    relocateContainer( false );
+    scrollViewDidScroll( this );
+}
+
 void TableView::insertCellAtIndex(ssize_t idx)
 {
     if (idx == CC_INVALID_INDEX)
