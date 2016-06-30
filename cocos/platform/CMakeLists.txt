@@ -209,6 +209,8 @@ set(COCOS_PLATFORM_HEADER
 set(COCOS_PLATFORM_SRC
     ${COCOS_PLATFORM_SPECIFIC_SRC}
     platform/CCSAXParser.cpp
+    platform/CCStroke.cpp
+    platform/CCStrokeScan.cpp
     platform/CCThread.cpp
     platform/CCGLView.cpp
     platform/CCFileUtils.cpp
@@ -223,3 +225,4 @@ set(COCOS_PLATFORM_SRC
     ../external/poly2tri/sweep/sweep_context.cc
     ../external/poly2tri/sweep/sweep.cc
     )
+
