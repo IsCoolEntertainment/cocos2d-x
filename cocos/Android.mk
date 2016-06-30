@@ -94,6 +94,8 @@ platform/CCFileUtils.cpp \
 platform/CCGLView.cpp \
 platform/CCImage.cpp \
 platform/CCSAXParser.cpp \
+platform/CCStroke.cpp \
+platform/CCStrokeScan.cpp \
 platform/CCThread.cpp \
 $(MATHNEONFILE) \
 math/CCAffineTransform.cpp \

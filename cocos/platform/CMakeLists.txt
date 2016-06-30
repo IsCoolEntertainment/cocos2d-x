@@ -161,8 +161,11 @@ set(COCOS_PLATFORM_SRC
     ${COCOS_PLATFORM_SPECIFIC_SRC}
     platform/CCDataManager.cpp
     platform/CCSAXParser.cpp
+    platform/CCStroke.cpp
+    platform/CCStrokeScan.cpp
     platform/CCThread.cpp
     platform/CCGLView.cpp
     platform/CCFileUtils.cpp
     platform/CCImage.cpp
     )
+
