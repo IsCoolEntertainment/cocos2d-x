@@ -49,6 +49,7 @@ Ref::Ref()
 , _scriptObject(nullptr)
 , _rooted(false)
 #endif
+, _deleter( nullptr )
 {
 #if CC_ENABLE_SCRIPT_BINDING
     static unsigned int uObjectCount = 0;
@@ -146,7 +147,10 @@ void Ref::release()
 #if CC_REF_LEAK_DETECTION
         untrackRef(this);
 #endif
-        delete this;
+        if ( _deleter == nullptr )
+            delete this;
+        else
+            (*_deleter)( this );
     }
 }
 
@@ -159,6 +163,11 @@ Ref* Ref::autorelease()
 unsigned int Ref::getReferenceCount() const
 {
     return _referenceCount;
+}
+
+void Ref::setDeleter( const std::function< void( void* ) >& deleter )
+{
+    _deleter = &deleter;
 }
 
 #if CC_REF_LEAK_DETECTION
