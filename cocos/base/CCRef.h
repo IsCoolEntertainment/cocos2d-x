@@ -29,6 +29,8 @@ THE SOFTWARE.
 #include "platform/CCPlatformMacros.h"
 #include "base/ccConfig.h"
 
+#include <functional>
+
 #define CC_REF_LEAK_DETECTION 0
 
 /**
@@ -124,6 +126,8 @@ public:
      */
     unsigned int getReferenceCount() const;
 
+    void setDeleter( const std::function< void( void* ) >& deleter );
+    
 protected:
     /**
      * Constructor
@@ -168,6 +172,9 @@ public:
 public:
     static void printLeaks();
 #endif
+
+ private:
+    const std::function< void( void* ) >* _deleter;
 };
 
 class Node;
