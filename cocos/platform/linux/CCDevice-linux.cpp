@@ -350,7 +350,8 @@ public:
         // check if the parameter is a font file shipped with the application
         std::string lowerCasePath = fontPath;
         std::transform(lowerCasePath.begin(), lowerCasePath.end(), lowerCasePath.begin(), ::tolower);
-        if ( lowerCasePath.find(".ttf") != std::string::npos ) {
+        if ( ( lowerCasePath.find(".ttf") != std::string::npos )
+             || lowerCasePath.find(".otf") != std::string::npos ) {
             fontPath = cocos2d::FileUtils::getInstance()->fullPathForFilename(fontPath.c_str());
 
             FILE *f = fopen(fontPath.c_str(), "r");
