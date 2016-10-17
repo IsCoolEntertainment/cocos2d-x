@@ -515,11 +515,12 @@ void TableView::scrollViewDidScroll(ScrollView* /*view*/)
         offset.y = offset.y + _viewSize.height/this->getContainer()->getScaleY();
     }
     startIdx = this->_indexFromOffset(offset);
-	if (startIdx == CC_INVALID_INDEX)
-	{
-		startIdx = countOfItems - 1;
-	}
 
+    if (startIdx == CC_INVALID_INDEX)
+        startIdx = countOfItems - 1;
+    else if ( startIdx != 0 )
+        --startIdx;
+    
     if (_vordering == VerticalFillOrder::TOP_DOWN)
     {
         offset.y -= _viewSize.height/this->getContainer()->getScaleY();
@@ -531,11 +532,12 @@ void TableView::scrollViewDidScroll(ScrollView* /*view*/)
     offset.x += _viewSize.width/this->getContainer()->getScaleX();
 
     endIdx   = this->_indexFromOffset(offset);
-    if (endIdx == CC_INVALID_INDEX)
-	{
-		endIdx = countOfItems - 1;
-	}
 
+    if (endIdx == CC_INVALID_INDEX)
+        endIdx = countOfItems - 1;
+    else if ( endIdx != countOfItems - 1 )
+        ++endIdx;
+    
 #if 0 // For Testing.
     Ref* pObj;
     int i = 0;
