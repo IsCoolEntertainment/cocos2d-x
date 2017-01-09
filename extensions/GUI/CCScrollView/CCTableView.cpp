@@ -486,6 +486,11 @@ void TableView::_updateCellPositions()
 
 }
 
+Vec2 TableView::offsetFromIndex(ssize_t index)
+{
+    return _offsetFromIndex( index );
+}
+
 void TableView::scrollViewDidScroll(ScrollView* /*view*/)
 {
     long countOfItems = _dataSource->numberOfCellsInTableView(this);
