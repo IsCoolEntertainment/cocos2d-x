@@ -273,6 +273,8 @@ public:
      */
     TableViewCell *cellAtIndex(ssize_t idx);
 
+    Vec2 offsetFromIndex(ssize_t index );
+    
     // Overrides
     virtual void scrollViewDidScroll(ScrollView* view) override;
     virtual void scrollViewDidZoom(ScrollView* view)  override {}
