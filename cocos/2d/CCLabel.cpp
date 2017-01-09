@@ -1274,7 +1274,8 @@ void Label::createSpriteForSystemFont(const FontDefinition& fontDef)
     _textSprite->setCameraMask(getCameraMask());
     _textSprite->setGlobalZOrder(getGlobalZOrder());
     _textSprite->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
-
+    _textSprite->setSubpixelRendering(false);
+ 
     if (_blendFuncDirty)
     {
         _textSprite->setBlendFunc(_blendFunc);
@@ -1305,6 +1306,7 @@ void Label::createShadowSpriteForSystemFont(const FontDefinition& fontDef)
         auto texture = getOrCreateTextTexture( shadowFontDefinition );
         _shadowNode = Sprite::createWithTexture(texture);
         _shadowNode->setColor( _shadowColor3B );
+        _shadowNode->setSubpixelRendering(false);
         
         GLProgram* const shader
           ( GLProgram::createWithByteArrays

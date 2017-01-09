@@ -312,6 +312,8 @@ Sprite::Sprite()
 , _shouldBeHidden(false)
 , _texture(nullptr)
 , _spriteFrame(nullptr)
+, _insideBounds(true)
+, _subpixelRendering( CC_NODE_RENDER_SUBPIXEL != 0 )
 , _centerRectNormalized(0,0,1,1)
 , _renderMode(Sprite::RenderMode::QUAD)
 , _stretchFactor(Vec2::ONE)
@@ -1078,7 +1080,8 @@ void Sprite::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
                                _blendFunc,
                                _polyInfo.triangles,
                                transform,
-                               flags);
+                               flags,
+                               _subpixelRendering);
 
         renderer->addCommand(&_trianglesCommand);
 
@@ -1427,6 +1430,11 @@ void Sprite::updateStretchFactor()
 
     // else:
     // Do nothing if renderMode is Polygon
+}
+
+void Sprite::setSubpixelRendering(bool enabled)
+{
+  _subpixelRendering = enabled;
 }
 
 void Sprite::setFlippedX(bool flippedX)
