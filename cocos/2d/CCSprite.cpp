@@ -665,6 +665,8 @@ void Sprite::updatePoly()
         // probably we can update the _trianglesCommand directly
         // to avoid memcpy'ing stuff
         _polyInfo.setTriangles(triangles);
+
+        updateColor();
     }
 }
 
