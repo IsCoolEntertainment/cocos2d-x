@@ -292,8 +292,7 @@
     if (self.returnPressed) {
         if (self.keyboardReturnType == cocos2d::ui::EditBox::KeyboardReturnType::NEXT) {
             action = cocos2d::ui::EditBoxDelegate::EditBoxEndAction::TAB_TO_NEXT;
-        } else if (self.keyboardReturnType == cocos2d::ui::EditBox::KeyboardReturnType::GO ||
-                 self.keyboardReturnType == cocos2d::ui::EditBox::KeyboardReturnType::SEND) {
+        } else {
             action = cocos2d::ui::EditBoxDelegate::EditBoxEndAction::RETURN;
         }
     }
