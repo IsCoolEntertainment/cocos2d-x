@@ -269,10 +269,6 @@ bool Sprite::initWithTexture(Texture2D *texture, const Rect& rect, bool rotated)
         _recursiveDirty = false;
         setDirty(false);
 
-        _opacityModifyRGB = true;
-
-        _blendFunc = BlendFunc::ALPHA_PREMULTIPLIED;
-
         _flippedX = _flippedY = false;
 
         // default transform anchor: center
@@ -294,6 +290,8 @@ bool Sprite::initWithTexture(Texture2D *texture, const Rect& rect, bool rotated)
         setTexture(texture);
         setTextureRect(rect, rotated, rect.size);
 
+        updateBlendFunc();
+        
         // by default use "Self Render".
         // if the sprite is added to a batchnode, then it will automatically switch to "batchnode Render"
         setBatchNode(nullptr);
@@ -318,6 +316,7 @@ Sprite::Sprite()
 , _originalContentSize(Size::ZERO)
 , _trianglesVertex(nullptr)
 , _trianglesIndex(nullptr)
+, _opacityModifyRGB(true)
 , _insideBounds(true)
 , _subpixelRendering( CC_NODE_RENDER_SUBPIXEL != 0 )
 , _stretchEnabled(true)
