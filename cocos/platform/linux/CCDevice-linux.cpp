@@ -55,7 +55,7 @@ struct LineBreakGlyph {
     FT_UInt glyphIndex;
     int paintPosition;
     int glyphWidth;
-
+    
     int bearingX;
     int kerning;
     int horizAdvance;
@@ -236,12 +236,13 @@ public:
             }
 
             if (iswspace(unicode)) {
-                prevGlyphIndex = glyphIndex;
-                prevCharacter = unicode;
                 lastBreakIndex = currentLine.glyphs.size();
 
-                if (firstBreakIndex == -1)
+                if (!iswspace(prevCharacter))
                     firstBreakIndex = lastBreakIndex;
+
+                prevGlyphIndex = glyphIndex;
+                prevCharacter = unicode;
             } else {
                 if (iswspace(prevCharacter))
                     lastBreakIndex = currentLine.glyphs.size();
