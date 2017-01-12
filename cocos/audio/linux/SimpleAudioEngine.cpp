@@ -173,7 +173,7 @@ void SimpleAudioEngine::setEffectsVolume(float volume)
  */
 unsigned int SimpleAudioEngine::playEffect(const char* filePath, bool loop, float pitch, float pan, float gain)
 {
-    return AudioEngine::play2d(filePath, loop, gain);
+    return AudioEngine::play2d(filePath, loop, gain * g_SimpleAudioEngineLinux->effectsvolume);
 }
 
 /**
