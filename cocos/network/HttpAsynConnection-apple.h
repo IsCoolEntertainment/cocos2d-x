@@ -33,7 +33,7 @@
 #import <Foundation/Foundation.h>
 #import <Security/Security.h>
 /// @cond
-@interface HttpAsynConnection : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate>
+@interface HttpAsynConnection : NSObject
 {
 }
 
@@ -44,7 +44,7 @@
 
 @property (copy) NSDictionary *responseHeader;
 
-@property (strong) NSMutableData *responseData;
+@property (strong) NSData *responseData;
 
 @property (readonly) NSInteger getDataTime;
 
@@ -55,8 +55,6 @@
 @property (strong) NSError *connError;
 
 @property (strong) NSURLConnection *conn;
-
-@property bool finish;
 
 @property (strong) NSRunLoop *runLoop;
 
