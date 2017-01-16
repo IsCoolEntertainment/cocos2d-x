@@ -43,8 +43,6 @@ THE SOFTWARE.
 #include "base/ccUtils.h"
 #include "base/CCNinePatchImageParser.h"
 
-
-
 using namespace std;
 
 NS_CC_BEGIN
@@ -314,7 +312,17 @@ void TextureCache::addImageAsyncCallBack(float /*dt*/)
 {
     Texture2D *texture = nullptr;
     AsyncStruct *asyncStruct = nullptr;
-    while (true)
+
+    const std::chrono::milliseconds start
+        ( std::chrono::duration_cast< std::chrono::milliseconds >
+          ( std::chrono::system_clock::now().time_since_epoch() ) );
+    
+    std::chrono::milliseconds end;
+
+    const float animationInterval
+        ( Director::getInstance()->getAnimationInterval() * 1000 );
+
+    do
     {
         // pop an AsyncStruct from response queue
         _responseMutex.lock();
@@ -388,7 +396,12 @@ void TextureCache::addImageAsyncCallBack(float /*dt*/)
         // release the asyncStruct
         delete asyncStruct;
         --_asyncRefCount;
+
+        end =
+            std::chrono::duration_cast< std::chrono::milliseconds >
+            ( std::chrono::system_clock::now().time_since_epoch() );
     }
+    while ((end - start).count() < animationInterval);
 
     if (0 == _asyncRefCount)
     {
