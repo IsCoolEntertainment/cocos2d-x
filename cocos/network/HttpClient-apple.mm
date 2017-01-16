@@ -219,10 +219,7 @@ static int processTask(HttpClient* client, HttpRequest* request, NSString* reque
     }
     [httpAsynConn startRequest:nsrequest];
     
-    while( httpAsynConn.finish != true)
-    {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-    }
+    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     
     //if http connection return error
     if (httpAsynConn.connError != nil)
