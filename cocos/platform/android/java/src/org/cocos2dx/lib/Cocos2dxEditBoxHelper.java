@@ -100,7 +100,6 @@ public class Cocos2dxEditBoxHelper {
                 editBox.setOpenGLViewScaleX(scaleX);
                 editBox.setPadding(getPadding(scaleX), 0, 0, 0);
 
-
                 FrameLayout.LayoutParams lParams = new FrameLayout.LayoutParams(
                         FrameLayout.LayoutParams.WRAP_CONTENT,
                         FrameLayout.LayoutParams.WRAP_CONTENT);
@@ -239,7 +238,7 @@ public class Cocos2dxEditBoxHelper {
                 if (editBox != null) {
                     Typeface tf;
                     if (!fontName.isEmpty()) {
-                        if (fontName.endsWith(".ttf")) {
+                        if (fontName.endsWith(".ttf") || fontName.endsWith(".otf")) {
                             try {
                                 tf = Cocos2dxTypefaces.get(mCocos2dxActivity.getContext(), fontName);
                             } catch (final Exception e) {
