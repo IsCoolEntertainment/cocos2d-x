@@ -30,8 +30,8 @@ THE SOFTWARE.
 #include "base/ccUTF8.h"
 
 #define  LOG_TAG    "JniHelper"
-#define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
-#define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
+#define  LOGD(format,...)  CCLOGINFO(LOG_TAG ": " format, __VA_ARGS__)
+#define  LOGE(format,...)  CCLOGERROR(LOG_TAG ": " format, __VA_ARGS__)
 
 static pthread_key_t g_key;
 
