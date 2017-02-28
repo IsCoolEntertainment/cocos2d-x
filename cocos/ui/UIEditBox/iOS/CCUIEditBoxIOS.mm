@@ -360,18 +360,7 @@
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
     CCLOG("textFieldShouldBeginEditing...");
-    _editState = YES;
-    _returnPressed = NO;
-    
-    auto view = cocos2d::Director::getInstance()->getOpenGLView();
-    CCEAGLView *eaglview = (CCEAGLView *) view->getEAGLView();
-    
-    if ([eaglview isKeyboardShown]) {
-        [self performSelector:@selector(animationSelector) withObject:nil afterDelay:0.0f];
-    }
-    
-    getEditBoxImplIOS()->editBoxEditingDidBegin();
-    return YES;
+    return [ self beginEditing ];
 }
 
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView
@@ -442,17 +431,7 @@
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)sender        // return NO to disallow editing.
 {
     CCLOG("textFieldShouldBeginEditing...");
-    _editState = YES;
-    
-    auto view = cocos2d::Director::getInstance()->getOpenGLView();
-    CCEAGLView *eaglview = (CCEAGLView *)view->getEAGLView();
-    
-    if ([eaglview isKeyboardShown]) {
-        [self performSelector:@selector(animationSelector) withObject:nil afterDelay:0.0f];
-    }
-    
-    getEditBoxImplIOS()->editBoxEditingDidBegin();
-    return YES;
+    return [ self beginEditing ];
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)sender
@@ -463,6 +442,22 @@
 
     getEditBoxImplIOS()->editBoxEditingDidEnd(inputText, [self getEndAction]);
     
+    return YES;
+}
+
+- (BOOL)beginEditing
+{
+    _editState = YES;
+    _returnPressed = NO;
+    
+    auto view = cocos2d::Director::getInstance()->getOpenGLView();
+    CCEAGLView *eaglview = (CCEAGLView *) view->getEAGLView();
+    
+    if ([eaglview isKeyboardShown]) {
+        [self performSelector:@selector(animationSelector) withObject:nil afterDelay:0.0f];
+    }
+    
+    getEditBoxImplIOS()->editBoxEditingDidBegin();
     return YES;
 }
 
