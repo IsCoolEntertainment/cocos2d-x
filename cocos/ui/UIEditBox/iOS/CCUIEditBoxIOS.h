@@ -55,6 +55,8 @@
 - (void)setPlaceHolder:(NSString *)text;
 - (void)setVisible:(BOOL)visible;
 - (void)setTextColor:(UIColor*)color;
+- (void)setPlaceholderFont:(UIFont *)font;
+- (void)setPlaceholderTextColor:(UIColor *)color;
 - (void)setFont:(UIFont *)font;
 - (void)updateFrame:(CGRect)rect;
 
