@@ -73,7 +73,7 @@ long AudioDecoder::fileTell(void* datasource)
 }
 
 AudioDecoder::AudioDecoder()
-        : _fileCurrPos(0), _sampleRate(-1)
+    :  _sampleRate(-1), _fileCurrPos(0)
 {
     auto pcmBuffer = std::make_shared<std::vector<char>>();
     pcmBuffer->reserve(4096);
