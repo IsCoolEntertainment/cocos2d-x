@@ -28,6 +28,13 @@
 #define CCDevice_apple_hpp
 
 #include "platform/CCDevice.h"
+#include "platform/CCPlatformdefine.h"
+
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+#import <UIKit/UIKit.h>
+#else
+#import <AppKit/AppKit.h>
+#endif
 
 namespace FontUtils {
     NSMutableParagraphStyle* _calculateParagraphStyle(bool enableWrap, int overflow);
