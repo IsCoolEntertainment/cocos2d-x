@@ -635,4 +635,17 @@ private:
 
 };
 
+class InfiniteSequence : public ActionsDemo
+{
+public:
+    CREATE_FUNC(InfiniteSequence);
+
+    virtual std::string subtitle() const override;
+    virtual void onEnter() override;
+    virtual void onExit() override;
+
+private:
+    cocos2d::Action* _action;
+};
+
 #endif

@@ -93,6 +93,7 @@ ActionsTests::ActionsTests()
     ADD_TEST_CASE(Issue14936_1);
     ADD_TEST_CASE(Issue14936_2);
     ADD_TEST_CASE(SequenceWithFinalInstant);
+    ADD_TEST_CASE(InfiniteSequence);
 }
 
 std::string ActionsDemo::title() const
@@ -2461,4 +2462,52 @@ void SequenceWithFinalInstant::onExit()
 std::string SequenceWithFinalInstant::subtitle() const
 {
     return "Instant action should be run. See console.";
+}
+
+//------------------------------------------------------------------
+//
+// InfiniteSequence
+//
+//------------------------------------------------------------------
+void InfiniteSequence::onEnter()
+{
+    ActionsDemo::onEnter();
+
+    _action =
+      ( Sequence::create
+        ( DelayTime::create( 1 ),
+          Show::create(),
+          EaseOut::create
+          ( ScaleTo::create( 1, 1.0 ), 0.1),
+          NULL ) );
+    _action->retain();
+    
+    _tamara->setVisible( false );
+    _kathia->setVisible( false );
+    _grossini->setVisible( false );
+    _grossini->setScale( 0.1 );
+    _grossini->runAction( _action );
+
+    schedule
+      ( [this]( float )
+        {
+          if ( _action->isDone() )
+            {
+              cocos2d::log( "Action is done. Everything went well." );
+              unschedule( "update_key" );
+            }
+        },
+        "update_key" );
+}
+
+void InfiniteSequence::onExit()
+{
+  _action->release();
+}
+
+std::string InfiniteSequence::subtitle() const
+{
+    return
+      "A sprite will appear, be scaled, then a message displayed in the"
+      " console.";
 }
