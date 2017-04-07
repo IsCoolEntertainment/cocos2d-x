@@ -99,3 +99,6 @@ void PcmBufferProvider::reset() {
 }
 
 }} // namespace cocos2d { namespace experimental {
+
+#undef LOG_TAG
+#undef ALOGVV

@@ -355,3 +355,9 @@ string FileUtilsAndroid::getWritablePath() const
 NS_CC_END
 
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+
+#undef LOG_TAG
+#undef LOGD
+
+#undef ASSETS_FOLDER_NAME
+#undef ASSETS_FOLDER_NAME_LENGTH

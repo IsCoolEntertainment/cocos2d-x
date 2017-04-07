@@ -32,7 +32,7 @@
 #include "2d/CCLabel.h"
 #include "ui/UIHelper.h"
 
-static const int CC_EDIT_BOX_PADDING = 5;
+static const int CC_COMMON_EDIT_BOX_PADDING = 5;
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 #define PASSWORD_CHAR "*"
@@ -111,20 +111,20 @@ void EditBoxImplCommon::placeInactiveLabels(const Size& size)
     auto placeholderSize = _labelPlaceHolder->getContentSize();
     
     if(_editBoxInputMode == EditBox::InputMode::ANY){
-        _label->setPosition(Vec2(CC_EDIT_BOX_PADDING, size.height - CC_EDIT_BOX_PADDING));
+        _label->setPosition(Vec2(CC_COMMON_EDIT_BOX_PADDING, size.height - CC_COMMON_EDIT_BOX_PADDING));
         _label->setVerticalAlignment(TextVAlignment::TOP);
         _label->enableWrap(true);
         
-        _labelPlaceHolder->setPosition(Vec2(CC_EDIT_BOX_PADDING,
-                                            size.height - CC_EDIT_BOX_PADDING));
+        _labelPlaceHolder->setPosition(Vec2(CC_COMMON_EDIT_BOX_PADDING,
+                                            size.height - CC_COMMON_EDIT_BOX_PADDING));
         _labelPlaceHolder->setVerticalAlignment(TextVAlignment::TOP);
     }
     else {
         _label->enableWrap(false);
-        _label->setPosition(Vec2(CC_EDIT_BOX_PADDING, size.height));
+        _label->setPosition(Vec2(CC_COMMON_EDIT_BOX_PADDING, size.height));
         _label->setVerticalAlignment(TextVAlignment::CENTER);
         
-        _labelPlaceHolder->setPosition(Vec2(CC_EDIT_BOX_PADDING,
+        _labelPlaceHolder->setPosition(Vec2(CC_COMMON_EDIT_BOX_PADDING,
                                             (size.height + placeholderSize.height) / 2));
         _labelPlaceHolder->setVerticalAlignment(TextVAlignment::CENTER);
     }
@@ -414,7 +414,7 @@ void EditBoxImplCommon::editBoxEditingChanged(const std::string& text)
 }
 
 Size ui::EditBoxImplCommon::applyPadding(const Size& sizeToCorrect) const {
-  constexpr auto paddingLeftRight = CC_EDIT_BOX_PADDING * 2;
+  constexpr auto paddingLeftRight = CC_COMMON_EDIT_BOX_PADDING * 2;
   return Size(sizeToCorrect.width - paddingLeftRight, sizeToCorrect.height);
 }
 

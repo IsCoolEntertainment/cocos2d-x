@@ -516,3 +516,8 @@ sf_count_t sf_readf_int(SNDFILE *handle, int *ptr, sf_count_t desiredFrames)
     return actualFrames;
 }
  */
+
+#undef LOG_TAG
+#undef WAVE_FORMAT_PCM
+#undef WAVE_FORMAT_IEEE_FLOAT
+#undef WAVE_FORMAT_EXTENSIBLE

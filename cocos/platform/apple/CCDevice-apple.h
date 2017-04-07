@@ -27,7 +27,7 @@
 #define CCDevice_apple_hpp
 
 #include "platform/CCDevice.h"
-#include "platform/CCPlatformdefine.h"
+#include "platform/CCPlatformDefine.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
 #import <UIKit/UIKit.h>

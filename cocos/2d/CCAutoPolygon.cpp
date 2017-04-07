@@ -33,7 +33,7 @@ THE SOFTWARE.
 #include <algorithm>
 #include <math.h>
 
-USING_NS_CC;
+NS_CC_BEGIN
 
 static unsigned short quadIndices9[]={
     0+4*0,1+4*0,2+4*0, 3+4*0,2+4*0,1+4*0,
@@ -723,3 +723,5 @@ PolygonInfo AutoPolygon::generatePolygon(const std::string& filename, const Rect
     AutoPolygon ap(filename);
     return ap.generateTriangles(rect, epsilon, threshold);
 }
+
+NS_CC_END

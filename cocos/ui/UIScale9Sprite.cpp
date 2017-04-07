@@ -36,8 +36,8 @@
 #include "2d/CCCamera.h"
 #include "renderer/CCRenderer.h"
 
-using namespace cocos2d;
-using namespace cocos2d::ui;
+NS_CC_BEGIN
+    namespace ui{
 
 Scale9Sprite* Scale9Sprite::create()
 {
@@ -619,3 +619,5 @@ Rect Scale9Sprite::getCapInsets() const
                 _originalContentSize.width - _insetLeft - _insetRight,
                 _originalContentSize.height - _insetTop - _insetBottom);
 }
+} // namespace ui
+NS_CC_END

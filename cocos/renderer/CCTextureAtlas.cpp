@@ -257,7 +257,7 @@ void TextureAtlas::setupVBOandVAO()
     glGenVertexArrays(1, &_VAOname);
     GL::bindVAO(_VAOname);
 
-#define kQuadSize sizeof(_quads[0].bl)
+    static constexpr std::size_t kQuadSize(sizeof(_quads[0].bl));
 
     glGenBuffers(2, &_buffersVBO[0]);
 
@@ -664,7 +664,7 @@ void TextureAtlas::drawNumberOfQuads(ssize_t numberOfQuads, ssize_t start)
         // Using VBO without VAO
         //
 
-#define kQuadSize sizeof(_quads[0].bl)
+        static constexpr std::size_t kQuadSize(sizeof(_quads[0].bl));
         glBindBuffer(GL_ARRAY_BUFFER, _buffersVBO[0]);
 
         // FIXME:: update is done in draw... perhaps it should be done in a timer

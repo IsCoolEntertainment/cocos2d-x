@@ -643,3 +643,9 @@ void AudioDecoderSLES::decodeToPcmCallback(SLAndroidSimpleBufferQueueItf queueIt
 }
 
 }} // namespace cocos2d { namespace experimental {
+
+#undef LOG_TAG
+#undef NUM_EXPLICIT_INTERFACES_FOR_PLAYER
+#undef NB_BUFFERS_IN_QUEUE
+#undef PCM_METADATA_VALUE_SIZE
+#undef PREFETCHEVENT_ERROR_CANDIDATE

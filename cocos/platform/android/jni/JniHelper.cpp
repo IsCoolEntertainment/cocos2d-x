@@ -312,3 +312,7 @@ namespace cocos2d {
     }
 
 } //namespace cocos2d
+
+#undef LOG_TAG
+#undef LOGD
+#undef LOGE
