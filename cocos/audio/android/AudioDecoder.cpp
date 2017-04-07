@@ -290,3 +290,5 @@ bool AudioDecoder::interleave()
 }
 
 }} // namespace cocos2d { namespace experimental {
+
+#undef LOG_TAG

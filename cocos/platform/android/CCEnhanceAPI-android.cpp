@@ -109,3 +109,6 @@ NS_CC_END
 
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 
+#undef LOG_TAG
+#undef LOGD
+#undef CLASS_NAME

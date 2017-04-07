@@ -60,6 +60,8 @@ APPLE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 */
+#ifndef __CCEAGLVIEW_H__
+#define __CCEAGLVIEW_H__
 
 #include "platform/CCPlatformConfig.h"
 #if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
@@ -159,3 +161,5 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 @end
 
 #endif // CC_PLATFORM_IOS
+
+#endif

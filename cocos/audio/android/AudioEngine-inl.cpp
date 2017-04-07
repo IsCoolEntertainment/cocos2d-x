@@ -483,4 +483,7 @@ void cocos_audioengine_focus_change(int focusChange)
     }
 }
 
+#undef LOG_TAG
+#undef DELAY_TIME_TO_REMOVE
+
 #endif

@@ -440,3 +440,11 @@ void ThreadPool::setThread(int tid)
 }
 
 }} // namespace cocos2d { namespace experimental {
+
+#undef LOG_TAG
+#undef LOGD
+#undef DEFAULT_THREAD_POOL_MIN_NUM
+#undef DEFAULT_THREAD_POOL_MAX_NUM
+#undef DEFAULT_SHRINK_INTERVAL
+#undef DEFAULT_SHRINK_STEP
+#undef DEFAULT_STRETCH_STEP

@@ -552,7 +552,7 @@ void ParticleSystemQuad::setupVBOandVAO()
     glGenVertexArrays(1, &_VAOname);
     GL::bindVAO(_VAOname);
 
-#define kQuadSize sizeof(_quads[0].bl)
+    static constexpr std::size_t kQuadSize( sizeof(_quads[0].bl) );
 
     glGenBuffers(2, &_buffersVBO[0]);
 

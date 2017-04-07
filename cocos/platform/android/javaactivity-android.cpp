@@ -138,3 +138,5 @@ JNIEXPORT void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeOnSurfaceChanged(JNI
 
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 
+#undef LOG_TAG
+#undef LOGD

@@ -786,3 +786,9 @@ void AudioResamplerOrder1::AsmStereo16Loop(int16_t *in, int32_t* maxOutPt, int32
 // ----------------------------------------------------------------------------
 
 }} // namespace cocos2d { namespace experimental {
+
+#undef LOG_TAG
+#undef MO_PARAM5
+#undef MO_ONE_FRAME
+#undef ST_PARAM5
+#undef ST_ONE_FRAME

@@ -824,7 +824,7 @@ void Renderer::drawBatchedTriangles()
     else
     {
         // Client Side Arrays
-#define kQuadSize sizeof(_verts[0])
+        static constexpr std::size_t kQuadSize( sizeof(_verts[0]) );
         glBindBuffer(GL_ARRAY_BUFFER, _buffersVBO[0]);
 
         glBufferData(GL_ARRAY_BUFFER, sizeof(_verts[0]) * _filledVertex , _verts, GL_DYNAMIC_DRAW);
