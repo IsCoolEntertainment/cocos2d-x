@@ -138,12 +138,14 @@ protected:
     void         placeInactiveLabels(const Size& size);
     virtual void doAnimationWhenKeyboardMove(float duration, float distance)override {};
 
+    Size applyPadding(const Size& size) const;
+    
     Label* _label;
     Label* _labelPlaceHolder;
     EditBox::InputMode    _editBoxInputMode;
     EditBox::InputFlag    _editBoxInputFlag;
     EditBox::KeyboardReturnType  _keyboardReturnType;
-    TextHAlignment _alignment;
+    cocos2d::TextHAlignment _alignment;
 
     std::string _text;
     std::string _placeHolder;

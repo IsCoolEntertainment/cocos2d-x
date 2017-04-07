@@ -224,3 +224,5 @@ IAudioPlayer::State PcmAudioPlayer::getState() const
 }
 
 }} // namespace cocos2d { namespace experimental {
+
+#undef LOG_TAG

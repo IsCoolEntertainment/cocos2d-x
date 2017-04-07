@@ -189,3 +189,5 @@ save_state:
 
 // ----------------------------------------------------------------------------
 }} // namespace cocos2d { namespace experimental {
+
+#undef LOG_TAG

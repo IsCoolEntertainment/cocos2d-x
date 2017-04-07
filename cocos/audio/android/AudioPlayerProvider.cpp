@@ -517,3 +517,5 @@ void AudioPlayerProvider::resume()
 }
 
 }} // namespace cocos2d { namespace experimental {
+
+#undef LOG_TAG

@@ -23,7 +23,8 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-
+#ifndef __CCUIEDITBOXMAC_H__
+#define __CCUIEDITBOXMAC_H__
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 #include "ui/UIEditBox/UIEditBoxImpl-mac.h"
@@ -73,3 +74,5 @@
 - (const char*) getText;
 
 @end
+
+#endif

@@ -16,7 +16,6 @@
 */
 
 #define LOG_TAG "AudioMixer"
-#define LOG_NDEBUG 1
 
 #include <stdint.h>
 #include <string.h>
@@ -546,7 +545,7 @@ static inline bool setVolumeRampVariables(float newVolume, int32_t ramp,
         ALOGD_IF(*pPrevVolume != *pSetVolume, "previous float ramp hasn't finished,"
                 " prev:%f  set_to:%f", *pPrevVolume, *pSetVolume);
         const float inc = (newVolume - *pPrevVolume) / ramp; // could be inf, nan, subnormal
-        const float maxv = max(newVolume, *pPrevVolume); // could be inf, cannot be nan, subnormal
+        const float maxv = ::max(newVolume, *pPrevVolume); // could be inf, cannot be nan, subnormal
 
         if (isnormal(inc) // inc must be a normal number (no subnormals, infinite, nan)
                 && maxv + inc != maxv) { // inc must make forward progress
@@ -2099,3 +2098,7 @@ AudioMixer::process_hook_t AudioMixer::getProcessHook(int processType, uint32_t 
 
 // ----------------------------------------------------------------------------
 }} // namespace cocos2d { namespace experimental {
+
+#undef LOG_TAG
+#undef ALOGVV
+#undef MIXTYPE_MONOVOL

@@ -373,3 +373,6 @@ bool AudioPlayer::setTime(float time)
 }
 
 #endif
+
+#undef LOG_TAG
+#undef ALOGVV

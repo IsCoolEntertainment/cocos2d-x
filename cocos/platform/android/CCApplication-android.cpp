@@ -46,7 +46,7 @@ extern "C" size_t __ctype_get_mb_cur_max(void) {
 }
 #endif
 
-static const std::string helperClassName = "org.cocos2dx.lib.Cocos2dxHelper";
+static const std::string applicationHelperClassName = "org.cocos2dx.lib.Cocos2dxHelper";
 
 NS_CC_BEGIN
 
@@ -99,7 +99,7 @@ Application* Application::sharedApplication()
 const char * Application::getCurrentLanguageCode()
 {
     static char code[3]={0};
-    std::string language = JniHelper::callStaticStringMethod(helperClassName, "getCurrentLanguage");
+    std::string language = JniHelper::callStaticStringMethod(applicationHelperClassName, "getCurrentLanguage");
     strncpy(code, language.c_str(), 2);
     code[2]='\0';
     return code;
@@ -119,12 +119,12 @@ Application::Platform Application::getTargetPlatform()
 
 std::string Application::getVersion()
 {
-    return JniHelper::callStaticStringMethod(helperClassName, "getVersion");
+    return JniHelper::callStaticStringMethod(applicationHelperClassName, "getVersion");
 }
 
 bool Application::openURL(const std::string &url)
 {
-    return JniHelper::callStaticBooleanMethod(helperClassName, "openURL", url);
+    return JniHelper::callStaticBooleanMethod(applicationHelperClassName, "openURL", url);
 }
 
 void Application::applicationScreenSizeChanged(int newWidth, int newHeight) {
@@ -134,3 +134,6 @@ void Application::applicationScreenSizeChanged(int newWidth, int newHeight) {
 NS_CC_END
 
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+
+#undef LOG_TAG
+#undef LOGD

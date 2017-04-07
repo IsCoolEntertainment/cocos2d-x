@@ -42,7 +42,7 @@ THE SOFTWARE.
 // 'Radius Mode' in Particle Designer uses a fixed emit rate of 30 hz. Since that can't be guaranteed in cocos2d,
 //  cocos2d uses a another approach, but the results are almost identical. 
 //
-
+#include <iostream>
 #include "2d/CCParticleSystem.h"
 
 #include <string>
@@ -285,6 +285,7 @@ bool ParticleSystem::init()
 
 bool ParticleSystem::initWithFile(const std::string& plistFile)
 {
+    std::cout << "file: " << plistFile << '\n';
     bool ret = false;
     _plistFile = FileUtils::getInstance()->fullPathForFilename(plistFile);
     ValueMap dict = FileUtils::getInstance()->getValueMapFromFile(_plistFile);
@@ -475,7 +476,7 @@ bool ParticleSystem::initWithDictionary(ValueMap& dictionary, const std::string&
                 // texture        
                 // Try to get the texture from the cache
                 std::string textureName = dictionary["textureFileName"].asString();
-                
+                std::cout << "  textureName: " << textureName << '\n';
                 size_t rPos = textureName.rfind('/');
                
                 if (rPos != string::npos)

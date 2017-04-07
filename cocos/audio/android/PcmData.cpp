@@ -137,3 +137,5 @@ std::string PcmData::toString() const
 }
 
 }} // namespace cocos2d { namespace experimental {
+
+#undef LOG_TAG

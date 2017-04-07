@@ -27,9 +27,8 @@
 #include "audio/include/SimpleAudioEngine.h"
 #include "audio/include/AudioEngine.h"
 
-using namespace CocosDenshion;
-using namespace cocos2d;
-using namespace cocos2d::experimental;
+namespace CocosDenshion
+{
 
 struct SimpleAudioEngineLinux {
     SimpleAudioEngine * engine = nullptr;
@@ -71,36 +70,37 @@ SimpleAudioEngine::~SimpleAudioEngine()
 void SimpleAudioEngine::preloadBackgroundMusic(const char* filePath)
 {
     g_SimpleAudioEngineLinux->musicpath = filePath;
-    AudioEngine::preload(filePath);
+    cocos2d::experimental::AudioEngine::preload(filePath);
 }
 
 void SimpleAudioEngine::playBackgroundMusic(const char* filePath, bool loop)
 {
     g_SimpleAudioEngineLinux->musicpath = filePath;
-    g_SimpleAudioEngineLinux->musicid = AudioEngine::play2d(filePath, loop);
+    g_SimpleAudioEngineLinux->musicid =
+        cocos2d::experimental::AudioEngine::play2d(filePath, loop);
 }
 
 void SimpleAudioEngine::stopBackgroundMusic(bool releaseData)
 {
-    AudioEngine::stop(g_SimpleAudioEngineLinux->musicid);
+    cocos2d::experimental::AudioEngine::stop(g_SimpleAudioEngineLinux->musicid);
     if (releaseData) {
-        AudioEngine::uncache(g_SimpleAudioEngineLinux->musicpath);
+        cocos2d::experimental::AudioEngine::uncache(g_SimpleAudioEngineLinux->musicpath);
     }
 }
 
 void SimpleAudioEngine::pauseBackgroundMusic()
 {
-    AudioEngine::pause(g_SimpleAudioEngineLinux->musicid);
+    cocos2d::experimental::AudioEngine::pause(g_SimpleAudioEngineLinux->musicid);
 }
 
 void SimpleAudioEngine::resumeBackgroundMusic()
 {
-    AudioEngine::resume(g_SimpleAudioEngineLinux->musicid);
+    cocos2d::experimental::AudioEngine::resume(g_SimpleAudioEngineLinux->musicid);
 }
 
 void SimpleAudioEngine::rewindBackgroundMusic()
 {
-    AudioEngine::setCurrentTime(g_SimpleAudioEngineLinux->musicid, 0);
+    cocos2d::experimental::AudioEngine::setCurrentTime(g_SimpleAudioEngineLinux->musicid, 0);
 }
 
 bool SimpleAudioEngine::willPlayBackgroundMusic()
@@ -110,7 +110,7 @@ bool SimpleAudioEngine::willPlayBackgroundMusic()
 
 bool SimpleAudioEngine::isBackgroundMusicPlaying()
 {
-    return AudioEngine::getState(g_SimpleAudioEngineLinux->musicid) == AudioEngine::AudioState::PLAYING;
+    return cocos2d::experimental::AudioEngine::getState(g_SimpleAudioEngineLinux->musicid) == cocos2d::experimental::AudioEngine::AudioState::PLAYING;
 }
 
 //
@@ -124,7 +124,7 @@ bool SimpleAudioEngine::isBackgroundMusicPlaying()
  */
 float SimpleAudioEngine::getBackgroundMusicVolume()
 {
-    return AudioEngine::getVolume(g_SimpleAudioEngineLinux->musicid);
+    return cocos2d::experimental::AudioEngine::getVolume(g_SimpleAudioEngineLinux->musicid);
 }
 
 /**
@@ -136,7 +136,7 @@ float SimpleAudioEngine::getBackgroundMusicVolume()
  */
 void SimpleAudioEngine::setBackgroundMusicVolume(float volume)
 {
-    AudioEngine::setVolume(g_SimpleAudioEngineLinux->musicid, volume);
+    cocos2d::experimental::AudioEngine::setVolume(g_SimpleAudioEngineLinux->musicid, volume);
 }
 
 /**
@@ -173,7 +173,7 @@ void SimpleAudioEngine::setEffectsVolume(float volume)
  */
 unsigned int SimpleAudioEngine::playEffect(const char* filePath, bool loop, float pitch, float pan, float gain)
 {
-    return AudioEngine::play2d(filePath, loop, gain * g_SimpleAudioEngineLinux->effectsvolume);
+    return cocos2d::experimental::AudioEngine::play2d(filePath, loop, gain * g_SimpleAudioEngineLinux->effectsvolume);
 }
 
 /**
@@ -183,7 +183,7 @@ unsigned int SimpleAudioEngine::playEffect(const char* filePath, bool loop, floa
  */
 void SimpleAudioEngine::pauseEffect(unsigned int soundId)
 {
-    AudioEngine::pause(soundId);
+    cocos2d::experimental::AudioEngine::pause(soundId);
 }
 
 /**
@@ -191,7 +191,7 @@ void SimpleAudioEngine::pauseEffect(unsigned int soundId)
  */
 void SimpleAudioEngine::pauseAllEffects()
 {
-    AudioEngine::pauseAll();
+    cocos2d::experimental::AudioEngine::pauseAll();
 }
 
 /**
@@ -201,7 +201,7 @@ void SimpleAudioEngine::pauseAllEffects()
  */
 void SimpleAudioEngine::resumeEffect(unsigned int soundId)
 {
-    AudioEngine::resume(soundId);
+    cocos2d::experimental::AudioEngine::resume(soundId);
 }
 
 /**
@@ -209,7 +209,7 @@ void SimpleAudioEngine::resumeEffect(unsigned int soundId)
  */
 void SimpleAudioEngine::resumeAllEffects()
 {
-    AudioEngine::resumeAll();
+    cocos2d::experimental::AudioEngine::resumeAll();
 }
 
 /**
@@ -219,7 +219,7 @@ void SimpleAudioEngine::resumeAllEffects()
  */
 void SimpleAudioEngine::stopEffect(unsigned int soundId)
 {
-    AudioEngine::stop(soundId);
+    cocos2d::experimental::AudioEngine::stop(soundId);
 }
 
 /**
@@ -227,7 +227,7 @@ void SimpleAudioEngine::stopEffect(unsigned int soundId)
  */
 void SimpleAudioEngine::stopAllEffects()
 {
-    AudioEngine::stopAll();
+    cocos2d::experimental::AudioEngine::stopAll();
 }
 
 /**
@@ -240,7 +240,7 @@ void SimpleAudioEngine::stopAllEffects()
  */
 void SimpleAudioEngine::preloadEffect(const char* filePath)
 {
-    AudioEngine::preload(filePath);
+    cocos2d::experimental::AudioEngine::preload(filePath);
 }
 
 /**
@@ -250,5 +250,7 @@ void SimpleAudioEngine::preloadEffect(const char* filePath)
  */
 void SimpleAudioEngine::unloadEffect(const char* filePath)
 {
-    AudioEngine::uncache(filePath);
+    cocos2d::experimental::AudioEngine::uncache(filePath);
 }
+
+} // namespace CocosDenshion

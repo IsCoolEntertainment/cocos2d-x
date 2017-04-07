@@ -60,6 +60,9 @@ APPLE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 */
+#ifndef __CCEAGLVIEW_H__
+#define __CCEAGLVIEW_H__
+
 #import <UIKit/UIKit.h>
 #import <OpenGLES/EAGL.h>
 #import <OpenGLES/EAGLDrawable.h>
@@ -134,3 +137,5 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 -(void) showKeyboard;
 -(void) hideKeyboard;
 @end
+
+#endif
