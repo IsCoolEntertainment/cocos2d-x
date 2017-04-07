@@ -45,7 +45,7 @@
 #endif
 
 namespace {
-unsigned int __idIndex = 0;
+unsigned int __cacheIdIndex = 0;
 }
 
 #define INVALID_AL_BUFFER_ID 0xFFFFFFFF
@@ -122,7 +122,7 @@ AudioCache::AudioCache()
 , _queBufferFrames(0)
 , _state(State::INITIAL)
 , _isDestroyed(std::make_shared<bool>(false))
-, _id(++__idIndex)
+, _id(++__cacheIdIndex)
 , _isLoadingFinished(false)
 , _isSkipReadDataTask(false)
 {
@@ -438,3 +438,6 @@ void AudioCache::invokingLoadCallbacks()
 }
 
 #endif
+
+#undef LOG_TAG
+#undef ALOGVV

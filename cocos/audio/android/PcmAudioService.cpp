@@ -191,3 +191,6 @@ void PcmAudioService::resume()
 }
 
 }} // namespace cocos2d { namespace experimental {
+
+#undef LOG_TAG
+#undef AUDIO_PLAYER_BUFFER_COUNT

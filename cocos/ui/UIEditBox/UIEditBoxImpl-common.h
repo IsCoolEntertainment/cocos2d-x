@@ -136,7 +136,9 @@ protected:
     void         refreshLabelAlignment();
     void         placeInactiveLabels(const Size& size);
     virtual void doAnimationWhenKeyboardMove(float duration, float distance)override {};
-  
+
+    Size applyPadding(const Size& size) const;
+    
     Label* _label;
     Label* _labelPlaceHolder;
     EditBox::InputMode    _editBoxInputMode;

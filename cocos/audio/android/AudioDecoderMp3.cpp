@@ -81,3 +81,5 @@ bool AudioDecoderMp3::decodeToPcm()
 }
 
 }} // namespace cocos2d { namespace experimental {
+
+#undef LOG_TAG

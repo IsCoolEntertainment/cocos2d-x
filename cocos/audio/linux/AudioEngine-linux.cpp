@@ -33,8 +33,8 @@
 #include "base/CCScheduler.h"
 #include "platform/CCFileUtils.h"
 
-using namespace cocos2d;
-using namespace cocos2d::experimental;
+NS_CC_BEGIN
+    namespace experimental{
 
 AudioEngineImpl * g_AudioEngineImpl = nullptr;
 
@@ -359,3 +359,6 @@ FMOD::Channel * AudioEngineImpl::getChannel(FMOD::Sound *sound)
     int id = static_cast<int>(reinterpret_cast<std::intptr_t>(data));
     return mapChannelInfo[id].channel;
 }
+
+} // namespace experimental
+NS_CC_END

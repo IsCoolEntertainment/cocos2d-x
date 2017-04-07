@@ -51,8 +51,8 @@
 #undef ERROR
 #endif // ERROR
 
-using namespace cocos2d;
-using namespace cocos2d::experimental;
+NS_CC_BEGIN
+    namespace experimental{
 
 const int AudioEngine::INVALID_AUDIO_ID = -1;
 const float AudioEngine::TIME_UNKNOWN = -1.0f;
@@ -590,3 +590,5 @@ bool AudioEngine::isEnabled()
     return _isEnabled;
 }
 
+} // namespace experimental
+NS_CC_END

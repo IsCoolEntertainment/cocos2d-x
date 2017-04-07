@@ -25,13 +25,8 @@ THE SOFTWARE.
 ****************************************************************************/
 #include "audio/android/ccdandroidUtils.h"
 
-#include <jni.h>
-#include <android/log.h>
-#include "platform/android/jni/JniHelper.h"
 #include "platform/CCFileUtils.h"
 
-
-USING_NS_CC;
 
 namespace CocosDenshion {
     namespace android {

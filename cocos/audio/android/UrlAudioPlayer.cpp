@@ -422,3 +422,5 @@ void UrlAudioPlayer::destroy()
 }
 
 }} // namespace cocos2d { namespace experimental {
+
+#undef LOG_TAG

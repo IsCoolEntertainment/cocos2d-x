@@ -27,7 +27,11 @@
 #include "audio/android/AudioDecoderProvider.h"
 #include "audio/android/AudioDecoderSLES.h"
 #include "audio/android/AudioDecoderOgg.h"
+
+#if CC_DISABLE_MP3_SUPPORT != 1
 #include "audio/android/AudioDecoderMp3.h"
+#endif
+
 #include "audio/android/AudioDecoderWav.h"
 #include "platform/CCFileUtils.h"
 
@@ -47,6 +51,7 @@ AudioDecoder* AudioDecoderProvider::createAudioDecoder(SLEngineItf engineItf, co
             decoder = nullptr;
         }
     }
+#if CC_DISABLE_MP3_SUPPORT != 1
     else if (extension == ".mp3")
     {
         decoder = new AudioDecoderMp3();
@@ -56,6 +61,7 @@ AudioDecoder* AudioDecoderProvider::createAudioDecoder(SLEngineItf engineItf, co
             decoder = nullptr;
         }
     }
+#endif
     else if (extension == ".wav")
     {
         decoder = new AudioDecoderWav();
@@ -91,3 +97,5 @@ void AudioDecoderProvider::destroyAudioDecoder(AudioDecoder** decoder)
 }
 
 }} // namespace cocos2d { namespace experimental {
+
+#undef LOG_TAG
