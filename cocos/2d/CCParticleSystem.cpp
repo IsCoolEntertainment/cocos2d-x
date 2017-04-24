@@ -41,7 +41,6 @@ THE SOFTWARE.
 // 'Radius Mode' in Particle Designer uses a fixed emit rate of 30 hz. Since that can't be guaranteed in cocos2d,
 //  cocos2d uses a another approach, but the results are almost identical. 
 //
-#include <iostream>
 #include "2d/CCParticleSystem.h"
 
 #include <string>
@@ -269,7 +268,6 @@ bool ParticleSystem::init()
 
 bool ParticleSystem::initWithFile(const std::string& plistFile)
 {
-    std::cout << "file: " << plistFile << '\n';
     bool ret = false;
     _plistFile = FileUtils::getInstance()->fullPathForFilename(plistFile);
     ValueMap dict = FileUtils::getInstance()->getValueMapFromFile(_plistFile);
@@ -455,24 +453,6 @@ bool ParticleSystem::initWithDictionary(ValueMap& dictionary, const std::string&
                 // texture        
                 // Try to get the texture from the cache
                 std::string textureName = dictionary["textureFileName"].asString();
-                std::cout << "  textureName: " << textureName << '\n';
-                size_t rPos = textureName.rfind('/');
-               
-                if (rPos != string::npos)
-                {
-                    string textureDir = textureName.substr(0, rPos + 1);
-                    
-                    if (!dirname.empty() && textureDir != dirname)
-                    {
-                        textureName = textureName.substr(rPos+1);
-                        textureName = dirname + textureName;
-                    }
-                }
-                else if (!dirname.empty() && !textureName.empty())
-                {
-                	textureName = dirname + textureName;
-                }
-                
                 Texture2D *tex = nullptr;
                 
                 if (!textureName.empty())
@@ -480,7 +460,35 @@ bool ParticleSystem::initWithDictionary(ValueMap& dictionary, const std::string&
                     // set not pop-up message box when load image failed
                     bool notify = FileUtils::getInstance()->isPopupNotify();
                     FileUtils::getInstance()->setPopupNotify(false);
-                    tex = Director::getInstance()->getTextureCache()->addImage(textureName);
+
+                    tex =
+                        Director::getInstance()->getTextureCache()->addImage
+                        (dirname + textureName);
+
+                    if ( tex == nullptr )
+                    {
+                        size_t rPos = textureName.rfind('/');
+               
+                        if (rPos != string::npos)
+                        {
+                            string textureDir = textureName.substr(0, rPos + 1);
+                    
+                            if (!dirname.empty() && textureDir != dirname)
+                            {
+                                textureName = textureName.substr(rPos+1);
+                                textureName = dirname + textureName;
+                            }
+                        }
+                        else if (!dirname.empty() && !textureName.empty())
+                        {
+                            textureName = dirname + textureName;
+                        }
+                
+                        tex =
+                            Director::getInstance()->getTextureCache()->addImage
+                            (textureName);
+                    }
+                    
                     // reset the value of UIImage notify
                     FileUtils::getInstance()->setPopupNotify(notify);
                 }
@@ -509,6 +517,7 @@ bool ParticleSystem::initWithDictionary(ValueMap& dictionary, const std::string&
                         // For android, we should retain it in VolatileTexture::addImage which invoked in Director::getInstance()->getTextureCache()->addUIImage()
                         image = new (std::nothrow) Image();
                         bool isOK = image->initWithImageData(deflated, deflatedLen);
+
                         CCASSERT(isOK, "CCParticleSystem: error init image with Data");
                         CC_BREAK_IF(!isOK);
                         
