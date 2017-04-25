@@ -136,6 +136,7 @@ bool Director::init(void)
     _accumDt = 0.0f;
     _frameRate = 0.0f;
     _FPSLabel = _drawnBatchesLabel = _drawnVerticesLabel = nullptr;
+    _textureCacheSizeLabel = nullptr;
     _totalFrames = 0;
     _lastUpdate = std::chrono::steady_clock::now();
     
@@ -213,6 +214,7 @@ Director::~Director(void)
     CC_SAFE_RELEASE(_FPSLabel);
     CC_SAFE_RELEASE(_drawnVerticesLabel);
     CC_SAFE_RELEASE(_drawnBatchesLabel);
+    CC_SAFE_RELEASE(_textureCacheSizeLabel);
 
     CC_SAFE_RELEASE(_runningScene);
     CC_SAFE_RELEASE(_notificationNode);
@@ -1110,6 +1112,7 @@ void Director::reset()
     CC_SAFE_RELEASE_NULL(_FPSLabel);
     CC_SAFE_RELEASE_NULL(_drawnBatchesLabel);
     CC_SAFE_RELEASE_NULL(_drawnVerticesLabel);
+    CC_SAFE_RELEASE_NULL(_textureCacheSizeLabel);
     
     // purge bitmap cache
     FontFNT::purgeCachedData();
@@ -1299,7 +1302,8 @@ void Director::showStats()
     ++_frames;
     _accumDt += _deltaTime;
     
-    if (_displayStats && _FPSLabel && _drawnBatchesLabel && _drawnVerticesLabel)
+    if (_displayStats && _FPSLabel && _drawnBatchesLabel &&
+        _drawnVerticesLabel && _textureCacheSizeLabel )
     {
         char buffer[30] = {0};
 
@@ -1328,7 +1332,16 @@ void Director::showStats()
             prevVerts = currentVerts;
         }
 
+        if( _textureCache != nullptr )
+        {
+            const std::size_t textureCacheSize
+                ( _textureCache->getCachedTexturesTotalSize() );
+            sprintf( buffer, "Texture Cache Size:%6lu", textureCacheSize );
+            _textureCacheSizeLabel->setString(buffer);
+        }
+
         const Mat4& identity = Mat4::IDENTITY;
+        _textureCacheSizeLabel->visit(_renderer, identity, 0);
         _drawnVerticesLabel->visit(_renderer, identity, 0);
         _drawnBatchesLabel->visit(_renderer, identity, 0);
         _FPSLabel->visit(_renderer, identity, 0);
@@ -1358,6 +1371,7 @@ void Director::createStatsLabel()
     std::string fpsString = "00.0";
     std::string drawBatchString = "000";
     std::string drawVerticesString = "00000";
+    std::string textureCacheSizeString = "000000";
     if (_FPSLabel)
     {
         fpsString = _FPSLabel->getString();
@@ -1367,6 +1381,7 @@ void Director::createStatsLabel()
         CC_SAFE_RELEASE_NULL(_FPSLabel);
         CC_SAFE_RELEASE_NULL(_drawnBatchesLabel);
         CC_SAFE_RELEASE_NULL(_drawnVerticesLabel);
+        CC_SAFE_RELEASE_NULL(_textureCacheSizeLabel);
         _textureCache->removeTextureForKey("/cc_fps_images");
         FileUtils::getInstance()->purgeCachedEntries();
     }
@@ -1415,10 +1430,16 @@ void Director::createStatsLabel()
     _drawnVerticesLabel->initWithString(drawVerticesString, texture, 12, 32, '.');
     _drawnVerticesLabel->setScale(scaleFactor);
 
+    _textureCacheSizeLabel = LabelAtlas::create();
+    _textureCacheSizeLabel->retain();
+    _textureCacheSizeLabel->setIgnoreContentScaleFactor(true);
+    _textureCacheSizeLabel->initWithString(textureCacheSizeString, texture, 12, 32, '.');
+    _textureCacheSizeLabel->setScale(scaleFactor);
 
     Texture2D::setDefaultAlphaPixelFormat(currentFormat);
 
     const int height_spacing = 22 / CC_CONTENT_SCALE_FACTOR();
+    _textureCacheSizeLabel->setPosition(Vec2(0, height_spacing*3) + CC_DIRECTOR_STATS_POSITION);
     _drawnVerticesLabel->setPosition(Vec2(0, height_spacing*2) + CC_DIRECTOR_STATS_POSITION);
     _drawnBatchesLabel->setPosition(Vec2(0, height_spacing*1) + CC_DIRECTOR_STATS_POSITION);
     _FPSLabel->setPosition(Vec2(0, height_spacing*0)+CC_DIRECTOR_STATS_POSITION);
