@@ -759,6 +759,19 @@ std::string TextureCache::getCSVCachedTextureInfo() const
     return buffer;
 }
 
+std::size_t TextureCache::getCachedTexturesTotalSize() const
+{
+    std::size_t result( 0 );
+    for( const auto& iterator : _textures )
+    {
+        Texture2D* texture = iterator.second;
+        unsigned int bpp = texture->getBitsPerPixelForFormat();
+        result += texture->getPixelsWide() * texture->getPixelsHigh() * bpp / 8;
+    }
+
+    return result;
+}
+
 void TextureCache::renameTextureWithKey(const std::string& srcName, const std::string& dstName)
 {
     std::string key = srcName;
