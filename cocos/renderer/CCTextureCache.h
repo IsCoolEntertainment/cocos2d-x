@@ -200,6 +200,7 @@ public:
     * @since v1.0
     */
     std::string getCachedTextureInfo() const;
+    std::string getCSVCachedTextureInfo() const;
 
     //Wait for texture cache to quit before destroy instance.
     /**Called by director, please do not called outside.*/

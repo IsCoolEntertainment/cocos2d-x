@@ -725,6 +725,38 @@ std::string TextureCache::getCachedTextureInfo() const
     return buffer;
 }
 
+std::string TextureCache::getCSVCachedTextureInfo() const
+{
+    std::string buffer( "Name,Reference Count,ID,Width,Height,BPP,Size\n" );
+    char buftmp[4096];
+
+    unsigned int count = 0;
+
+    for (auto& texture : _textures) {
+
+        memset(buftmp, 0, sizeof(buftmp));
+
+
+        Texture2D* tex = texture.second;
+        unsigned int bpp = tex->getBitsPerPixelForFormat();
+        // Each texture takes up width * height * bytesPerPixel bytes.
+        auto bytes = tex->getPixelsWide() * tex->getPixelsHigh() * bpp / 8;
+        count++;
+        snprintf(buftmp, sizeof(buftmp) - 1, "\"%s\",%lu,%lu,%lu,%lu,%ld,%lu\n",
+            texture.first.c_str(),
+            (long)tex->getReferenceCount(),
+            (long)tex->getName(),
+            (long)tex->getPixelsWide(),
+            (long)tex->getPixelsHigh(),
+            (long)bpp,
+            (long)bytes / 1024);
+
+        buffer += buftmp;
+    }
+
+    return buffer;
+}
+
 void TextureCache::renameTextureWithKey(const std::string& srcName, const std::string& dstName)
 {
     std::string key = srcName;
