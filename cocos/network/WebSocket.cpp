@@ -1328,3 +1328,14 @@ int WebSocket::onSocketCallback(struct lws *wsi,
 }
 
 NS_NETWORK_END
+
+#undef NS_NETWORK_BEGIN
+#undef NS_NETWORK_END
+
+#undef WS_RX_BUFFER_SIZE
+#undef WS_RESERVE_RECEIVE_BUFFER_SIZE
+
+#undef  LOG_TAG
+#undef QUOTEME
+#undef LOGD
+#undef LOGE
