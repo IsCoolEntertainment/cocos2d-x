@@ -87,7 +87,7 @@ extern "C" {
 const char * getApkPath() {
     if (g_apkPath.empty())
     {
-        g_apkPath = JniHelper::callStaticStringMethod(className, "getAssetsPath");
+        g_apkPath = JniHelper::callStaticStringMethod(javaHelperClassName, "getAssetsPath");
     }
 
     return g_apkPath.c_str();
