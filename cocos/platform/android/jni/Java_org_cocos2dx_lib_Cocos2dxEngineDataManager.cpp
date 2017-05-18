@@ -1679,3 +1679,11 @@ JNIEXPORT void JNICALL JNI_FUNC_PREFIX(nativeOnChangeMuteEnabled)(JNIEnv* env, j
 /////////////////////////////
 
 } // extern "C" {
+
+#undef LOG_TAG
+#undef LOGD
+#undef LOGE
+
+#undef EDM_DEBUG
+
+#undef JNI_FUNC_PREFIX

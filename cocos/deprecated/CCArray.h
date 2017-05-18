@@ -170,13 +170,13 @@ I found that it's not work in C++. So it keep what it's look like in version 1.0
 
 #define CCARRAY_FOREACH(__array__, __object__)                                                                         \
     if ((__array__) && (__array__)->data->num > 0)                                                                     \
-    for(Ref** __arr__ = (__array__)->data->arr, **__end__ = (__array__)->data->arr + (__array__)->data->num-1;    \
+    for(cocos2d::Ref** __arr__ = (__array__)->data->arr, **__end__ = (__array__)->data->arr + (__array__)->data->num-1; \
     __arr__ <= __end__ && (((__object__) = *__arr__) != NULL/* || true*/);                                             \
     __arr__++)
 
 #define CCARRAY_FOREACH_REVERSE(__array__, __object__)                                                                  \
     if ((__array__) && (__array__)->data->num > 0)                                                                      \
-    for(Ref** __arr__ = (__array__)->data->arr + (__array__)->data->num-1, **__end__ = (__array__)->data->arr;     \
+    for(cocos2d::Ref** __arr__ = (__array__)->data->arr + (__array__)->data->num-1, **__end__ = (__array__)->data->arr;     \
     __arr__ >= __end__ && (((__object__) = *__arr__) != NULL/* || true*/);                                              \
     __arr__--)
 
@@ -184,7 +184,7 @@ I found that it's not work in C++. So it keep what it's look like in version 1.0
 #define CCARRAY_VERIFY_TYPE(__array__, __type__)                                                                 \
     do {                                                                                                         \
         if ((__array__) && (__array__)->data->num > 0)                                                           \
-            for(Ref** __arr__ = (__array__)->data->arr,                                                     \
+            for(cocos2d::Ref** __arr__ = (__array__)->data->arr,                                                     \
                 **__end__ = (__array__)->data->arr + (__array__)->data->num-1; __arr__ <= __end__; __arr__++)    \
                 CCASSERT(dynamic_cast<__type__>(*__arr__), "element type is wrong!");                            \
     } while(false)
