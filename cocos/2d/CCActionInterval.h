@@ -33,7 +33,6 @@ THE SOFTWARE.
 
 #include "2d/CCAction.h"
 #include "2d/CCAnimation.h"
-#include "base/CCProtocols.h"
 #include "base/CCVector.h"
 
 NS_CC_BEGIN
