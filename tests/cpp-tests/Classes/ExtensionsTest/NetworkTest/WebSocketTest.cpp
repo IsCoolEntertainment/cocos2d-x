@@ -245,7 +245,7 @@ void WebSocketTest::onClose(network::WebSocket* ws)
     release();
 }
 
-void WebSocketTest::onError(network::WebSocket* ws, const network::WebSocket::ErrorCode& error)
+void WebSocketTest::onError(network::WebSocket* ws, const network::WebSocket::ErrorCode& error, const std::string& message)
 {
     log("Error was fired, error code: %d", static_cast<int>(error));
     char buf[100] = {0};
@@ -318,7 +318,7 @@ void WebSocketTest::onMenuSendBinaryClicked(cocos2d::Ref *sender)
     {
         _sendBinaryStatus->setString("Send Binary WS is waiting...");
         char buf[] = "Hello WebSocket,\0 I'm\0 a\0 binary\0 message\0.";
-        _wsiSendBinary->send((unsigned char*)buf, sizeof(buf));
+        _wsiSendBinary->send(buf, sizeof(buf));
     }
     else
     {
@@ -387,7 +387,7 @@ void WebSocketCloseTest::onClose(network::WebSocket* ws)
     CC_SAFE_DELETE(ws);
 }
 
-void WebSocketCloseTest::onError(network::WebSocket* ws, const network::WebSocket::ErrorCode& error)
+void WebSocketCloseTest::onError(network::WebSocket* ws, const network::WebSocket::ErrorCode& error, const std::string& message)
 {
     log("Error was fired, error code: %d", static_cast<int>(error));
 }
