@@ -915,7 +915,7 @@ void WebSocket::onClientOpenConnectionRequest()
 
         if (nullptr == _wsInstance)
         {
-            onConnectionError();
+            onConnectionError( "Failed to initialize the library" );
             return;
         }
     }
@@ -1190,7 +1190,7 @@ int WebSocket::onConnectionOpened()
     return 0;
 }
 
-int WebSocket::onConnectionError()
+int WebSocket::onConnectionError( const std::string& message )
 {
     {
         std::lock_guard<std::mutex> lk(_readyStateMutex);
@@ -1203,14 +1203,14 @@ int WebSocket::onConnectionError()
     }
 
     std::shared_ptr<std::atomic<bool>> isDestroyed = _isDestroyed;
-    __wsHelper->sendMessageToCocosThread([this, isDestroyed](){
+    __wsHelper->sendMessageToCocosThread([this, isDestroyed, message](){
         if (*isDestroyed)
         {
             LOGD("WebSocket instance was destroyed!\n");
         }
         else
         {
-            _delegate->onError(this, ErrorCode::CONNECTION_FAILURE);
+            _delegate->onError(this, ErrorCode::CONNECTION_FAILURE, message);
         }
     });
 
@@ -1294,7 +1294,10 @@ int WebSocket::onSocketCallback(struct lws *wsi,
             break;
 
         case LWS_CALLBACK_CLIENT_CONNECTION_ERROR:
-            ret = onConnectionError();
+            ret = onConnectionError
+                ( ( in == nullptr )
+                  ? std::string()
+                  : std::string( static_cast< char* >(in), len ) );
             break;
 
         case LWS_CALLBACK_WSI_DESTROY:

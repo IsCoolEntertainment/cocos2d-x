@@ -154,9 +154,12 @@ public:
          * 4. when a socket descriptor needs to be removed from an external polling array. in is again the struct libwebsocket_pollargs containing the fd member to be removed. If you are using the internal polling loop, you can just ignore it and current _readyState is State::CONNECTING.
          *
          * @param ws The WebSocket object connected.
-         * @param error WebSocket::ErrorCode enum,would be ErrorCode::TIME_OUT or ErrorCode::CONNECTION_FAILURE.
+         * @param error WebSocket::ErrorCode enum,would be ErrorCode::TIME_OUT
+         * or ErrorCode::CONNECTION_FAILURE.
+         * @param A message describing the step that failed.
          */
-        virtual void onError(WebSocket* ws, const ErrorCode& error) = 0;
+        virtual void onError
+        (WebSocket* ws, const ErrorCode& error, const std::string& message) = 0;
     };
 
     /**
@@ -230,7 +233,7 @@ private:
     int onClientWritable();
     int onClientReceivedData(void* in, ssize_t len);
     int onConnectionOpened();
-    int onConnectionError();
+    int onConnectionError( const std::string& message );
     int onConnectionClosed();
 
     struct lws_vhost* createVhost(struct lws_protocols* protocols, int& sslConnection);
