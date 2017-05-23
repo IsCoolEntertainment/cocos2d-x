@@ -192,7 +192,7 @@ public:
      *  @param len the size of binary string data.
      *  @lua sendstring
      */
-    void send(const unsigned char* binaryMsg, unsigned int len);
+    void send(const char* binaryMsg, unsigned int len);
 
     /**
      *  @brief Closes the connection to server synchronously.
