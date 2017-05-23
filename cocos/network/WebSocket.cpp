@@ -664,7 +664,7 @@ void WebSocket::send(const std::string& message)
     }
 }
 
-void WebSocket::send(const unsigned char* binaryMsg, unsigned int len)
+void WebSocket::send(const char* binaryMsg, unsigned int len)
 {
     if (_readyState == State::OPEN)
     {
