@@ -121,7 +121,7 @@ static void wsLog(const char * format, ...)
 
 // Since CCLOG isn't thread safe, we uses LOGD for multi-thread logging.
 #ifdef ANDROID
-    #if COCOS2D_DEBUG > 0
+    #if COCOS2D_LOG_LEVEL != 0
         #define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG,__VA_ARGS__)
     #else
         #define LOGD(...)
@@ -129,7 +129,7 @@ static void wsLog(const char * format, ...)
 
     #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG,__VA_ARGS__)
 #else
-    #if COCOS2D_DEBUG > 0
+    #if COCOS2D_LOG_LEVEL != 0
         #define LOGD(fmt, ...) wsLog("D/" LOG_TAG " (" QUOTEME(__LINE__) "): " fmt "", ##__VA_ARGS__)
     #else
         #define LOGD(fmt, ...)
@@ -140,7 +140,7 @@ static void wsLog(const char * format, ...)
 
 static void printWebSocketLog(int level, const char *line)
 {
-#if COCOS2D_DEBUG > 0
+#if COCOS2D_LOG_LEVEL != 0
     static const char * const log_level_names[] = {
         "ERR",
         "WARN",
@@ -388,7 +388,15 @@ void WsThreadHelper::onSubThreadLoop()
 
 void WsThreadHelper::onSubThreadStarted()
 {
-    int log_level = LLL_ERR | LLL_WARN | LLL_NOTICE | LLL_INFO/* | LLL_DEBUG | LLL_PARSER | LLL_HEADER*/ | LLL_EXT | LLL_CLIENT | LLL_LATENCY;
+    int log_level = LLL_ERR;
+
+#if COCOS2D_LOG_LEVEL != 0
+    log_level |=
+        LLL_WARN | LLL_NOTICE | LLL_INFO
+        /* | LLL_DEBUG | LLL_PARSER | * LLL_HEADER */
+        | LLL_EXT | LLL_CLIENT | LLL_LATENCY;
+#endif
+    
     lws_set_log_level(log_level, printWebSocketLog);
 
     memset(__defaultProtocols, 0, sizeof(2 * sizeof(struct lws_protocols)));
