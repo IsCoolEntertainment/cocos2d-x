@@ -387,6 +387,8 @@ Label::Label(TextHAlignment hAlignment /* = TextHAlignment::LEFT */,
 , _fontAtlas(nullptr)
 , _reusedLetter(nullptr)
 , _horizontalKernings(nullptr)
+, _purgeTextureListener(nullptr)
+, _resetTextureListener(nullptr)
 , _boldEnabled(false)
 , _underlineNode(nullptr)
 , _strikethroughEnabled(false)
@@ -400,6 +402,35 @@ Label::Label(TextHAlignment hAlignment /* = TextHAlignment::LEFT */,
     _debugDrawNode = DrawNode::create();
     addChild(_debugDrawNode);
 #endif
+}
+
+Label::~Label()
+{
+    delete [] _horizontalKernings;
+
+    if (_fontAtlas)
+    {
+        Node::removeAllChildrenWithCleanup(true);
+        CC_SAFE_RELEASE_NULL(_reusedLetter);
+        _batchNodes.clear();
+        FontAtlasCache::releaseFontAtlas(_fontAtlas);
+    }
+
+    if (_purgeTextureListener != nullptr)
+        _eventDispatcher->removeEventListener(_purgeTextureListener);
+
+    if (_resetTextureListener)
+        _eventDispatcher->removeEventListener(_resetTextureListener);
+
+    CC_SAFE_RELEASE_NULL(_textSprite);
+    CC_SAFE_RELEASE_NULL(_shadowNode);
+}
+
+
+void Label::registerListeners()
+{
+    if (_purgeTextureListener != nullptr)
+        return;
 
     _purgeTextureListener = EventListenerCustom::create(FontAtlas::CMD_PURGE_FONTATLAS, [this](EventCustom* event){
         if (_fontAtlas && _currentLabelType == LabelType::TTF && event->getUserData() == _fontAtlas)
@@ -435,24 +466,6 @@ Label::Label(TextHAlignment hAlignment /* = TextHAlignment::LEFT */,
         }
     });
     _eventDispatcher->addEventListenerWithFixedPriority(_resetTextureListener, 2);
-}
-
-Label::~Label()
-{
-    delete [] _horizontalKernings;
-
-    if (_fontAtlas)
-    {
-        Node::removeAllChildrenWithCleanup(true);
-        CC_SAFE_RELEASE_NULL(_reusedLetter);
-        _batchNodes.clear();
-        FontAtlasCache::releaseFontAtlas(_fontAtlas);
-    }
-    _eventDispatcher->removeEventListener(_purgeTextureListener);
-    _eventDispatcher->removeEventListener(_resetTextureListener);
-
-    CC_SAFE_RELEASE_NULL(_textSprite);
-    CC_SAFE_RELEASE_NULL(_shadowNode);
 }
 
 void Label::reset()
@@ -1012,6 +1025,8 @@ bool Label::setTTFConfigInternal(const TTFConfig& ttfConfig)
         this->enableUnderline();
     if (_fontConfig.strikethrough)
         this->enableStrikethrough();
+
+    registerListeners();
 
     return true;
 }
