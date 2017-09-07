@@ -46,6 +46,7 @@
 #include "base/CCEventType.h"
 #include "2d/CCCamera.h"
 #include "2d/CCScene.h"
+#include "platform/CCPlatformConfig.h"
 
 NS_CC_BEGIN
 
@@ -315,7 +316,13 @@ void Renderer::setupVBOAndVAO()
 
 void Renderer::setupVBO()
 {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+    if ( glGenBuffers != nullptr )
+        glGenBuffers(2, &_buffersVBO[0]);
+#else
     glGenBuffers(2, &_buffersVBO[0]);
+#endif
+        
     // Issue #15652
     // Should not initialize VBO with a large size (VBO_SIZE=65536),
     // it may cause low FPS on some Android devices like LG G4 & Nexus 5X.
