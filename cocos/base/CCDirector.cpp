@@ -61,6 +61,7 @@ THE SOFTWARE.
 #include "base/CCAutoreleasePool.h"
 #include "base/CCConfiguration.h"
 #include "base/CCAsyncTaskPool.h"
+#include "base/RefTrace.h"
 #include "base/ObjectFactory.h"
 #include "platform/CCApplication.h"
 
@@ -158,6 +159,12 @@ bool Director::init()
     RenderState::initialize();
 
     return true;
+}
+
+void Director::setMemoryLog(const std::string& fileName)
+{
+    RefTrace::getInstance()->setEnabled(true);
+    _memoryLog.open(fileName);
 }
 
 Director::~Director()
@@ -263,6 +270,17 @@ void Director::drawScene()
     //tick before glClear: issue #533
     if (! _paused)
     {
+        if (RefTrace::getInstance()->isEnabled())
+        {
+            _memoryLog << "========\n"
+                       << "Memory Log\n"
+                       << "Date (ms.): "
+                       << std::chrono::duration_cast<std::chrono::milliseconds>
+                          (_lastUpdate.time_since_epoch()).count() << '\n'
+                       << "========\n";
+            RefTrace::getInstance()->dump(_memoryLog);
+        }
+
         _eventDispatcher->dispatchEvent(_eventBeforeUpdate);
         _scheduler->update(_deltaTime);
         _eventDispatcher->dispatchEvent(_eventAfterUpdate);

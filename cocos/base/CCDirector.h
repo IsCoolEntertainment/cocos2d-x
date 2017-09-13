@@ -32,6 +32,7 @@ THE SOFTWARE.
 #include <stack>
 #include <thread>
 #include <chrono>
+#include <fstream>
 
 #include "platform/CCPlatformMacros.h"
 #include "base/CCRef.h"
@@ -174,6 +175,8 @@ public:
     bool isDisplayStats() { return _displayStats; }
     /** Display the FPS on the bottom-left corner of the screen. */
     void setDisplayStats(bool displayStats) { _displayStats = displayStats; }
+
+    void setMemoryLog(const std::string& filename);
     
     /** Get seconds per frame. */
     float getSecondsPerFrame() { return _secondsPerFrame; }
@@ -723,6 +726,8 @@ protected:
     /* whether or not the director is in a valid state */
     bool _invalid = false;
 
+    std::ofstream _memoryLog;
+    
     // GLView will recreate stats labels to fit visible rect
     friend class GLView;
 };
