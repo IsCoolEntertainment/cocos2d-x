@@ -28,6 +28,10 @@ THE SOFTWARE.
 #include "base/ccMacros.h"
 #include "base/CCScriptSupport.h"
 
+#if CC_REF_ALLOCATION_TRACE
+#include "base/RefTrace.h"
+#endif
+
 #if CC_REF_LEAK_DETECTION
 #include <algorithm>    // std::find
 #include <thread>
@@ -59,6 +63,10 @@ Ref::Ref()
 #if CC_REF_LEAK_DETECTION
     trackRef(this);
 #endif
+
+#if CC_REF_ALLOCATION_TRACE
+    RefTrace::getInstance()->insert( this );
+#endif
 }
 
 Ref::~Ref()
@@ -85,6 +93,10 @@ Ref::~Ref()
 #if CC_REF_LEAK_DETECTION
     if (_referenceCount != 0)
         untrackRef(this);
+#endif
+
+#if CC_REF_ALLOCATION_TRACE
+    RefTrace::getInstance()->erase( this );
 #endif
 }
 

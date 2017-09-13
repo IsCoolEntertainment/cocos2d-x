@@ -53,6 +53,7 @@ set(COCOS_BASE_SRC
   base/CCUserDefault.cpp
   base/CCValue.cpp
   base/ObjectFactory.cpp
+  base/RefTrace.cpp
   base/CCStencilStateManager.cpp
   base/TGAlib.cpp
   base/ZipUtils.cpp
