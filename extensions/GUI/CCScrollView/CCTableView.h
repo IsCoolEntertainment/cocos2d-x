@@ -231,6 +231,8 @@ public:
     void setVerticalFillOrder(VerticalFillOrder order);
     VerticalFillOrder getVerticalFillOrder();
 
+    void setIncludeAdjacentItemsInScroll( bool value );
+    
     /**
      * Updates the position of all cells, the TableView size and view offset.
      *
@@ -333,7 +335,8 @@ protected:
     Direction _oldDirection;
 
     bool _isUsedCellsDirty;
-
+    bool _includeAdjacentItemsInScroll;
+    
 public:
     void _updateContentSize();
 

@@ -90,6 +90,7 @@ TableView::TableView()
 , _tableViewDelegate(nullptr)
 , _oldDirection(Direction::NONE)
 , _isUsedCellsDirty(false)
+, _includeAdjacentItemsInScroll(false)
 {
 
 }
@@ -114,6 +115,11 @@ void TableView::setVerticalFillOrder(VerticalFillOrder fillOrder)
 TableView::VerticalFillOrder TableView::getVerticalFillOrder()
 {
     return _vordering;
+}
+
+void TableView::setIncludeAdjacentItemsInScroll( bool value )
+{
+    _includeAdjacentItemsInScroll = value;
 }
 
 void TableView::reloadData()
@@ -519,7 +525,7 @@ void TableView::scrollViewDidScroll(ScrollView* /*view*/)
 
     if (startIdx == CC_INVALID_INDEX)
         startIdx = countOfItems - 1;
-    else if ( startIdx != 0 )
+    else if ( ( startIdx != 0 ) && _includeAdjacentItemsInScroll )
         --startIdx;
     
     if (_vordering == VerticalFillOrder::TOP_DOWN)
@@ -536,7 +542,7 @@ void TableView::scrollViewDidScroll(ScrollView* /*view*/)
 
     if (endIdx == CC_INVALID_INDEX)
         endIdx = countOfItems - 1;
-    else if ( endIdx != countOfItems - 1 )
+    else if ( ( endIdx != countOfItems - 1 ) && _includeAdjacentItemsInScroll )
         ++endIdx;
     
 #if 0 // For Testing.
