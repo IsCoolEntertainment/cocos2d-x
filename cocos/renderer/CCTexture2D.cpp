@@ -555,7 +555,7 @@ bool Texture2D::hasPremultipliedAlpha() const
     return _hasPremultipliedAlpha;
 }
 
-bool Texture2D::initWithData(const void *data, ssize_t dataLen, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, const Size& /*contentSize*/, bool preMultipliedAlpha)
+bool Texture2D::initWithData(const void *data, ssize_t dataLen, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, const Size& contentSize, bool preMultipliedAlpha)
 {
     CCASSERT(dataLen>0 && pixelsWide>0 && pixelsHigh>0, "Invalid size");
 
@@ -563,10 +563,10 @@ bool Texture2D::initWithData(const void *data, ssize_t dataLen, Texture2D::Pixel
     MipmapInfo mipmap;
     mipmap.address = (unsigned char*)data;
     mipmap.len = static_cast<int>(dataLen);
-    return initWithMipmaps(&mipmap, 1, pixelFormat, pixelsWide, pixelsHigh, preMultipliedAlpha);
+    return initWithMipmaps(&mipmap, 1, pixelFormat, pixelsWide, pixelsHigh, contentSize, preMultipliedAlpha);
 }
 
-bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, bool preMultipliedAlpha)
+bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, const Size& contentSize, bool preMultipliedAlpha)
 {
     //the pixelFormat must be a certain value 
     CCASSERT(pixelFormat != PixelFormat::NONE && pixelFormat != PixelFormat::AUTO, "the \"pixelFormat\" param must be a certain value!");
@@ -599,7 +599,7 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
     //Set the row align only when mipmapsNum == 1 and the data is uncompressed
     if (mipmapsNum == 1 && !info.compressed)
     {
-        unsigned int bytesPerRow = pixelsWide * info.bpp / 8;
+        unsigned int bytesPerRow = contentSize.width * info.bpp / 8;
 
         if(bytesPerRow % 8 == 0)
         {
@@ -678,7 +678,8 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
         }
         else
         {
-            glTexImage2D(GL_TEXTURE_2D, i, info.internalFormat, (GLsizei)width, (GLsizei)height, 0, info.format, info.type, data);
+            glTexImage2D(GL_TEXTURE_2D, i, info.internalFormat, width, height, 0, info.format, info.type, nullptr);
+            glTexSubImage2D(GL_TEXTURE_2D, i, 0, 0, (GLsizei)contentSize.width, (GLsizei)contentSize.height, info.format, info.type, data);
         }
 
         if (i > 0 && (width != height || ccNextPOT(width) != width ))
@@ -697,7 +698,7 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
         height = MAX(height >> 1, 1);
     }
 
-    _contentSize = Size((float)pixelsWide, (float)pixelsHigh);
+    _contentSize = contentSize;
     _pixelsWide = pixelsWide;
     _pixelsHigh = pixelsHigh;
     _pixelFormat = pixelFormat;
@@ -769,7 +770,7 @@ bool Texture2D::initWithImage(Image *image, PixelFormat format)
             CCLOG("cocos2d: WARNING: This image has more than 1 mipmaps and we will not convert the data format");
         }
 
-        initWithMipmaps(image->getMipmaps(), image->getNumberOfMipmaps(), image->getRenderFormat(), imageWidth, imageHeight, image->hasPremultipliedAlpha());
+        initWithMipmaps(image->getMipmaps(), image->getNumberOfMipmaps(), image->getRenderFormat(), imageWidth, imageHeight, imageSize, image->hasPremultipliedAlpha());
         
         return true;
     }
@@ -1077,10 +1078,10 @@ bool Texture2D::initWithString(const char *text, const std::string& fontName, fl
     tempDef._enableWrap    = enableWrap;
     tempDef._overflow      = overflow;
 
-    return initWithString(text, tempDef);
+    return initWithString(text, tempDef, false);
 }
 
-bool Texture2D::initWithString(const char *text, const FontDefinition& textDefinition)
+bool Texture2D::initWithString(const char *text, const FontDefinition& textDefinition, bool enableMipmap)
 {
     if(!text || 0 == strlen(text))
     {
@@ -1145,6 +1146,12 @@ bool Texture2D::initWithString(const char *text, const FontDefinition& textDefin
     Size  imageSize = Size((float)imageWidth, (float)imageHeight);
     pixelFormat = convertDataToFormat(outData.getBytes(), imageWidth*imageHeight*4, PixelFormat::RGBA8888, pixelFormat, &outTempData, &outTempDataLen);
 
+    if ( enableMipmap )
+    {
+        imageWidth = ccNextPOT( imageWidth );
+        imageHeight = ccNextPOT( imageHeight );
+    }
+
     ret = initWithData(outTempData, outTempDataLen, pixelFormat, imageWidth, imageHeight, imageSize);
 
     if (outTempData != nullptr && outTempData != outData.getBytes())
@@ -1152,6 +1159,9 @@ bool Texture2D::initWithString(const char *text, const FontDefinition& textDefin
         free(outTempData);
     }
     _hasPremultipliedAlpha = hasPremultipliedAlpha;
+
+    if ( enableMipmap )
+        generateMipmap();
 
     return ret;
 }

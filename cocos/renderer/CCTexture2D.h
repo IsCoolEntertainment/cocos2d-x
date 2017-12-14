@@ -241,7 +241,7 @@ public:
      @param pixelsHigh The image height.
      @param preMultipliedAlpha The texture has premultiplied alpha
      */
-    bool initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, bool preMultipliedAlpha = false);
+    bool initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, const Size& contentSize, bool preMultipliedAlpha = false);
 
     /** Update with texture data.
      
@@ -301,7 +301,7 @@ public:
      @param text A null terminated string.
      @param textDefinition A FontDefinition object contains font attributes.
      */
-    bool initWithString(const char *text, const FontDefinition& textDefinition);
+    bool initWithString(const char *text, const FontDefinition& textDefinition, bool enableMipmap = false);
 
     /** Sets the min filter, mag filter, wrap s and wrap t texture parameters.
     If the texture size is NPOT (non power of 2), then in can only use GL_CLAMP_TO_EDGE in GL_TEXTURE_WRAP_{S,T}.
