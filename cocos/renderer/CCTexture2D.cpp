@@ -680,6 +680,24 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
         {
             glTexImage2D(GL_TEXTURE_2D, i, info.internalFormat, width, height, 0, info.format, info.type, nullptr);
             glTexSubImage2D(GL_TEXTURE_2D, i, 0, 0, (GLsizei)contentSize.width, (GLsizei)contentSize.height, info.format, info.type, data);
+
+            if ( ( contentSize.width != width ) || ( contentSize.height != height ) )
+            {
+                const GLsizei w( width - contentSize.width );
+                const GLsizei h( height - contentSize.height );
+
+                if ( w > 0 )
+                {
+                    std::vector< GLubyte > empty( w * height * info.bpp / 8, 0 );
+                    glTexSubImage2D(GL_TEXTURE_2D, i, contentSize.width, 0, w, height, info.format, info.type, empty.data());
+                }
+
+                if ( h > 0 )
+                {
+                    std::vector< GLubyte > empty( contentSize.width * h * info.bpp / 8, 0 );
+                    glTexSubImage2D(GL_TEXTURE_2D, i, 0, contentSize.height, contentSize.width, h, info.format, info.type, empty.data());
+                }
+            }
         }
 
         if (i > 0 && (width != height || ccNextPOT(width) != width ))
