@@ -1803,6 +1803,7 @@ public:
      */
     virtual bool isOpacityModifyRGB() const;
 
+#if CC_ENABLE_NODE_CALLBACKS
     /**
      * Set the callback of event onEnter.
      * @param callback A std::function<void()> callback.
@@ -1843,6 +1844,7 @@ public:
      * @return std::function<void()>
      */
     const std::function<void()>& getonExitTransitionDidStartCallback() const { return _onExitTransitionDidStartCallback; }
+#endif
     
     /**
      * get & set camera mask, the node is visible by the camera whose camera flag & node's camera mask is true
@@ -1917,8 +1919,6 @@ protected:
     Vec2 _position;                 ///< position of the node
     float _positionZ;               ///< OpenGL real Z position
     Vec2 _normalizedPosition;
-    bool _usingNormalizedPosition;
-    bool _normalizedPositionDirty;
 
     float _skewX;                   ///< skew angle on x-axis
     float _skewY;                   ///< skew angle on y-axis
@@ -1927,18 +1927,13 @@ protected:
     Vec2 _anchorPoint;              ///< anchor point normalized (NOT in points)
 
     Size _contentSize;              ///< untransformed size of the node
-    bool _contentSizeDirty;         ///< whether or not the contentSize is dirty
 
     Mat4 _modelViewTransform;       ///< ModelView transform of the Node.
 
     // "cache" variables are allowed to be mutable
     mutable Mat4 _transform;        ///< transform
-    mutable bool _transformDirty;   ///< transform dirty flag
     mutable Mat4 _inverse;          ///< inverse transform
-    mutable bool _inverseDirty;     ///< inverse transform dirty flag
     mutable Mat4* _additionalTransform; ///< two transforms needed by additional transforms
-    mutable bool _additionalTransformDirty; ///< transform dirty ?
-    bool _transformUpdated;         ///< Whether or not the Transform object was updated since the last frame
 
 #if CC_LITTLE_ENDIAN
     union {
@@ -1981,15 +1976,6 @@ protected:
 
     EventDispatcher* _eventDispatcher;  ///< event dispatcher used to dispatch all kinds of events
 
-    bool _running;                  ///< is running
-
-    bool _visible;                  ///< is this node visible
-
-    bool _ignoreAnchorPointForPosition; ///< true if the Anchor Vec2 will be (0,0) when you position the Node, false otherwise.
-                                          ///< Used by Layer and Scene.
-
-    bool _reorderChildDirty;          ///< children order dirty flag
-    bool _isTransitionFinished;       ///< flag to indicate whether the transition was finished
 
 #if CC_ENABLE_SCRIPT_BINDING
     int _scriptHandler;               ///< script handler for onEnter() & onExit(), used in Javascript binding and Lua binding.
@@ -2004,16 +1990,35 @@ protected:
     GLubyte     _realOpacity;
     Color3B     _displayedColor;
     Color3B     _realColor;
-    bool        _cascadeColorEnabled;
-    bool        _cascadeOpacityEnabled;
 
     // camera mask, it is visible only when _cameraMask & current camera' camera flag is true
     unsigned short _cameraMask;
-    
+
+#if CC_ENABLE_NODE_CALLBACKS
     std::function<void()> _onEnterCallback;
     std::function<void()> _onExitCallback;
     std::function<void()> _onEnterTransitionDidFinishCallback;
     std::function<void()> _onExitTransitionDidStartCallback;
+#endif
+
+    bool _usingNormalizedPosition:1;
+    bool _normalizedPositionDirty:1;
+    bool _contentSizeDirty:1;         ///< whether or not the contentSize is dirty
+    mutable bool _transformDirty:1;   ///< transform dirty flag
+    mutable bool _inverseDirty:1;     ///< inverse transform dirty flag
+    mutable bool _additionalTransformDirty:1; ///< transform dirty ?
+    bool _transformUpdated:1;         ///< Whether or not the Transform object was updated since the last frame
+    bool _running:1;                  ///< is running
+
+    bool _visible:1;                  ///< is this node visible
+
+    bool _ignoreAnchorPointForPosition:1; ///< true if the Anchor Vec2 will be (0,0) when you position the Node, false otherwise.
+                                          ///< Used by Layer and Scene.
+
+    bool _reorderChildDirty:1;          ///< children order dirty flag
+    bool _isTransitionFinished:1;       ///< flag to indicate whether the transition was finished
+    bool        _cascadeColorEnabled:1;
+    bool        _cascadeOpacityEnabled:1;
 
 //Physics:remaining backwardly compatible  
 #if CC_USE_PHYSICS
