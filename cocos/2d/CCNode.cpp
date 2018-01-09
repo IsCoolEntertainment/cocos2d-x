@@ -71,18 +71,11 @@ Node::Node()
 , _scaleY(1.0f)
 , _scaleZ(1.0f)
 , _positionZ(0.0f)
-, _usingNormalizedPosition(false)
-, _normalizedPositionDirty(false)
 , _skewX(0.0f)
 , _skewY(0.0f)
 , _anchorPoint(0, 0)
 , _contentSize(Size::ZERO)
-, _contentSizeDirty(true)
-, _transformDirty(true)
-, _inverseDirty(true)
 , _additionalTransform(nullptr)
-, _additionalTransformDirty(false)
-, _transformUpdated(true)
 // children (lazy allocs)
 // lazy alloc
 , _localZOrder$Arrival(0LL)
@@ -96,11 +89,6 @@ Node::Node()
 , _userData(nullptr)
 , _userObject(nullptr)
 , _glProgramState(nullptr)
-, _running(false)
-, _visible(true)
-, _ignoreAnchorPointForPosition(false)
-, _reorderChildDirty(false)
-, _isTransitionFinished(false)
 #if CC_ENABLE_SCRIPT_BINDING
 , _updateScriptHandler(0)
 #endif
@@ -109,13 +97,27 @@ Node::Node()
 , _realOpacity(255)
 , _displayedColor(Color3B::WHITE)
 , _realColor(Color3B::WHITE)
-, _cascadeColorEnabled(false)
-, _cascadeOpacityEnabled(false)
 , _cameraMask(1)
+#if CC_ENABLE_NODE_CALLBACKS
 , _onEnterCallback(nullptr)
 , _onExitCallback(nullptr)
 , _onEnterTransitionDidFinishCallback(nullptr)
 , _onExitTransitionDidStartCallback(nullptr)
+#endif
+, _usingNormalizedPosition(false)
+, _normalizedPositionDirty(false)
+, _contentSizeDirty(true)
+, _transformDirty(true)
+, _inverseDirty(true)
+, _additionalTransformDirty(false)
+, _transformUpdated(true)
+, _running(false)
+, _visible(true)
+, _ignoreAnchorPointForPosition(false)
+, _reorderChildDirty(false)
+, _isTransitionFinished(false)
+, _cascadeColorEnabled(false)
+, _cascadeOpacityEnabled(false)
 #if CC_USE_PHYSICS
 , _physicsBody(nullptr)
 #endif
@@ -1323,9 +1325,11 @@ void Node::onEnter()
     }
 #endif
     
+#if CC_ENABLE_NODE_CALLBACKS
     if (_onEnterCallback)
         _onEnterCallback();
-
+#endif
+    
     if (_componentContainer && !_componentContainer->isEmpty())
     {
         _componentContainer->onEnter();
@@ -1358,9 +1362,11 @@ void Node::onEnterTransitionDidFinish()
     }
 #endif
     
+#if CC_ENABLE_NODE_CALLBACKS
     if (_onEnterTransitionDidFinishCallback)
         _onEnterTransitionDidFinishCallback();
-
+#endif
+    
     _isTransitionFinished = true;
     for( const auto &child: _children)
         child->onEnterTransitionDidFinish();
@@ -1383,8 +1389,10 @@ void Node::onExitTransitionDidStart()
     }
 #endif
     
+#if CC_ENABLE_NODE_CALLBACKS
     if (_onExitTransitionDidStartCallback)
         _onExitTransitionDidStartCallback();
+#endif
     
     for( const auto &child: _children)
         child->onExitTransitionDidStart();
@@ -1411,8 +1419,10 @@ void Node::onExit()
     }
 #endif
     
+#if CC_ENABLE_NODE_CALLBACKS
     if (_onExitCallback)
         _onExitCallback();
+#endif
     
     if (_componentContainer && !_componentContainer->isEmpty())
     {

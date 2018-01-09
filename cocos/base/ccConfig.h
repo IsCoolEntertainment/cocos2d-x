@@ -419,4 +419,8 @@ THE SOFTWARE.
 
 #define CC_LABEL_MAX_LENGTH ((1<<16)/4)
 
+#ifndef CC_ENABLE_NODE_CALLBACKS
+#define CC_ENABLE_NODE_CALLBACKS 1
+#endif
+
 #endif // __CCCONFIG_H__
