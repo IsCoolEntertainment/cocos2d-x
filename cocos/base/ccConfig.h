@@ -405,4 +405,8 @@ THE SOFTWARE.
 #define CC_STRIP_FPS 0
 #endif
 
+#ifndef CC_ENABLE_NODE_CALLBACKS
+#define CC_ENABLE_NODE_CALLBACKS 1
+#endif
+
 #endif // __CCCONFIG_H__
