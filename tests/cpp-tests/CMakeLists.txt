@@ -57,7 +57,6 @@ set(TESTS_SRC
   Classes/BugsTest/Bug-Child.cpp
   Classes/BugsTest/BugsTest.cpp
   Classes/Camera3DTest/Camera3DTest.cpp
-  Classes/ChipmunkTest/ChipmunkTest.cpp
   Classes/ClickAndMoveTest/ClickAndMoveTest.cpp
   Classes/ClippingNodeTest/ClippingNodeTest.cpp
   Classes/CocosDenshionTest/CocosDenshionTest.cpp
@@ -164,6 +163,9 @@ if(WIN32 OR MACOSX OR LINUX)
 endif()
 
 if(USE_CHIPMUNK)
+  list(APPEND TESTS_SRC
+    Classes/ChipmunkTest/ChipmunkTest.cpp
+    )
   include_directories(${CHIPMUNK_INCLUDE_DIRS})
 endif()
 
