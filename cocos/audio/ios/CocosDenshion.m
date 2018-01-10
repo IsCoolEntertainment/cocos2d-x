@@ -318,7 +318,7 @@ static BOOL _mixerRateSet = NO;
         _sourceGroups[i].enabled = false;
         _sourceGroups[i].nonInterruptible = false;
         _sourceGroups[i].totalSources = definitions[i];
-        _sourceGroups[i].sourceStatuses = malloc(sizeof(_sourceGroups[i].sourceStatuses[0]) * _sourceGroups[i].totalSources);
+        _sourceGroups[i].sourceStatuses = (int*)malloc(sizeof(_sourceGroups[i].sourceStatuses[0]) * _sourceGroups[i].totalSources);
         if (_sourceGroups[i].sourceStatuses) {
             for (int j=0; j < _sourceGroups[i].totalSources; j++) {
                 //First bit is used to indicate whether source is locked, index is shifted back 1 bit
@@ -503,7 +503,7 @@ static BOOL _mixerRateSet = NO;
         free(tmpBufferInfos);
         return NO;
     } else {
-        _buffers = tmpBufferInfos;
+        _buffers = (bufferInfo*)tmpBufferInfos;
         int oldBufferTotal = bufferTotal;
         bufferTotal = bufferTotal + increment;
         [self _generateBuffers:oldBufferTotal endIndex:bufferTotal-1];
