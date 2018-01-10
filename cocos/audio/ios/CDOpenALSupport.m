@@ -53,6 +53,7 @@ void* CDloadWaveAudioData(CFURLRef inFileURL, ALsizei *outDataSize, ALenum *outD
 {
     OSStatus                        err = noErr;    
     UInt64                            fileDataSize = 0;
+    UInt32        dataSize;
     AudioStreamBasicDescription        theFileFormat;
     UInt32                            thePropertySize = sizeof(theFileFormat);
     AudioFileID                        afid = 0;
@@ -84,7 +85,7 @@ void* CDloadWaveAudioData(CFURLRef inFileURL, ALsizei *outDataSize, ALenum *outD
     if(err) { CDLOG(@"MyGetOpenALAudioData: AudioFileGetProperty(kAudioFilePropertyAudioDataByteCount) FAILED, Error = %ld\n", err); goto Exit; }
     
     // Read all the data into memory
-    UInt32        dataSize = (UInt32)fileDataSize;
+    dataSize = (UInt32)fileDataSize;
     theData = malloc(dataSize);
     if (theData)
     {
@@ -233,7 +234,7 @@ Exit:
 void* CDGetOpenALAudioData(CFURLRef inFileURL, ALsizei *outDataSize, ALenum *outDataFormat, ALsizei*    outSampleRate) {
     
     CFStringRef extension = CFURLCopyPathExtension(inFileURL);
-    CFComparisonResult isWavFile = 0;
+    CFComparisonResult isWavFile = kCFCompareEqualTo;
     if (extension != NULL) {
         isWavFile = CFStringCompare (extension,(CFStringRef)@"wav", kCFCompareCaseInsensitive);
         CFRelease(extension);

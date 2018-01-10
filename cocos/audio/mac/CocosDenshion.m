@@ -29,7 +29,7 @@ ALvoid  alcMacOSXMixerOutputRateProc(const ALdouble value);
 
 
 typedef ALvoid    AL_APIENTRY    (*alBufferDataStaticProcPtr) (const ALint bid, ALenum format, ALvoid* data, ALsizei size, ALsizei freq);
-ALvoid  alBufferDataStaticProc(const ALint bid, ALenum format, ALvoid* data, ALsizei size, ALsizei freq)
+ALvoid  alBufferDataStaticProc_mac(const ALint bid, ALenum format, ALvoid* data, ALsizei size, ALsizei freq)
 {
     static    alBufferDataStaticProcPtr    proc = NULL;
     
@@ -319,7 +319,7 @@ static BOOL _mixerRateSet = NO;
         _sourceGroups[i].enabled = false;
         _sourceGroups[i].nonInterruptible = false;
         _sourceGroups[i].totalSources = definitions[i];
-        _sourceGroups[i].sourceStatuses = malloc(sizeof(_sourceGroups[i].sourceStatuses[0]) * _sourceGroups[i].totalSources);
+        _sourceGroups[i].sourceStatuses = (int*)malloc(sizeof(_sourceGroups[i].sourceStatuses[0]) * _sourceGroups[i].totalSources);
         if (_sourceGroups[i].sourceStatuses) {
             for (int j=0; j < _sourceGroups[i].totalSources; j++) {
                 //First bit is used to indicate whether source is locked, index is shifted back 1 bit
@@ -495,7 +495,7 @@ static BOOL _mixerRateSet = NO;
         free(tmpBufferInfos);
         return NO;
     } else {
-        _buffers = tmpBufferInfos;
+        _buffers = (bufferInfo*)tmpBufferInfos;
         int oldBufferTotal = bufferTotal;
         bufferTotal = bufferTotal + increment;
         [self _generateBuffers:oldBufferTotal endIndex:bufferTotal-1];
@@ -550,7 +550,7 @@ static BOOL _mixerRateSet = NO;
 #endif        
             
 #ifdef CD_USE_STATIC_BUFFERS
-            alBufferDataStaticProc(_buffers[soundId].bufferId, format, soundData, size, freq);
+            alBufferDataStaticProc_mac(_buffers[soundId].bufferId, format, soundData, size, freq);
             _buffers[soundId].bufferData = soundData;//Save the pointer to the new data
 #else        
             alBufferData(_buffers[soundId].bufferId, format, soundData, size, freq);

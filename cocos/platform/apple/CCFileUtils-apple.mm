@@ -285,7 +285,7 @@ bool FileUtilsApple::isFileExistInternal(const std::string& filePath) const
     return ret;
 }
 
-static int unlink_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf)
+static int unlink_cb_apple(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf)
 {
     auto ret = remove(fpath);
     if (ret)
@@ -304,7 +304,7 @@ bool FileUtilsApple::removeDirectory(const std::string& path)
         return false;
     }
 
-    if (nftw(path.c_str(),unlink_cb, 64, FTW_DEPTH | FTW_PHYS))
+    if (nftw(path.c_str(),unlink_cb_apple, 64, FTW_DEPTH | FTW_PHYS))
         return false;
     else
         return true;
