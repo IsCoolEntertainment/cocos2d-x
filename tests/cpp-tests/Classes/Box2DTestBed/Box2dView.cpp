@@ -176,7 +176,7 @@ void Box2DView::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
 {
     Layer::draw(renderer, transform, flags);
 
-    _customCmd.init(_globalZOrder, transform, flags);
+    _customCmd.init(_displayedGlobalZOrder, transform, flags);
     _customCmd.func = CC_CALLBACK_0(Box2DView::onDraw, this, transform, flags);
     renderer->addCommand(&_customCmd);
 }

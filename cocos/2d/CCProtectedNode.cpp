@@ -101,7 +101,7 @@ void ProtectedNode::addProtectedChild(Node *child, int zOrder, int tag)
     this->insertProtectedChild(child, zOrder);
     
     child->setTag(tag);
-    child->setGlobalZOrder(_globalZOrder);
+    child->setGlobalZOrder(_displayedGlobalZOrder);
     child->setParent(this);
     child->updateOrderOfArrival();
     

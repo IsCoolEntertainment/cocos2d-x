@@ -481,7 +481,7 @@ std::string Material_invalidate::subtitle() const
 
 void Material_invalidate::draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t flags)
 {
-    _customCommand.init(_globalZOrder, transform, flags);
+    _customCommand.init(_displayedGlobalZOrder, transform, flags);
     _customCommand.func = []() {
         glDisable(GL_DEPTH_TEST);
         CHECK_GL_ERROR_DEBUG();
@@ -557,7 +557,7 @@ std::string Material_renderState::subtitle() const
 
 void Material_renderState::draw(cocos2d::Renderer *renderer, const cocos2d::Mat4 &transform, uint32_t flags)
 {
-    _customCommand.init(_globalZOrder, transform, flags);
+    _customCommand.init(_displayedGlobalZOrder, transform, flags);
     _customCommand.func = [this]() {
 
         this->_stateBlock.bind();

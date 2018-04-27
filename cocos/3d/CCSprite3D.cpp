@@ -792,7 +792,7 @@ void Sprite3D::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
     for (auto mesh: _meshes)
     {
         mesh->draw(renderer,
-                   _globalZOrder,
+                   _displayedGlobalZOrder,
                    transform,
                    flags,
                    _lightMask,

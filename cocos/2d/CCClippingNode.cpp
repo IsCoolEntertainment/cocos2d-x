@@ -207,12 +207,12 @@ void ClippingNode::visit(Renderer *renderer, const Mat4 &parentTransform, uint32
 
     //Add group command
         
-    _groupCommand.init(_globalZOrder);
+    _groupCommand.init(_displayedGlobalZOrder);
     renderer->addCommand(&_groupCommand);
 
     renderer->pushGroup(_groupCommand.getRenderQueueID());
 
-    _beforeVisitCmd.init(_globalZOrder);
+    _beforeVisitCmd.init(_displayedGlobalZOrder);
     _beforeVisitCmd.func = CC_CALLBACK_0(StencilStateManager::onBeforeVisit, _stencilStateManager);
     renderer->addCommand(&_beforeVisitCmd);
     
@@ -235,7 +235,7 @@ void ClippingNode::visit(Renderer *renderer, const Mat4 &parentTransform, uint32
     }
     _stencil->visit(renderer, _modelViewTransform, flags);
 
-    _afterDrawStencilCmd.init(_globalZOrder);
+    _afterDrawStencilCmd.init(_displayedGlobalZOrder);
     _afterDrawStencilCmd.func = CC_CALLBACK_0(StencilStateManager::onAfterDrawStencil, _stencilStateManager);
     renderer->addCommand(&_afterDrawStencilCmd);
 
@@ -267,7 +267,7 @@ void ClippingNode::visit(Renderer *renderer, const Mat4 &parentTransform, uint32
         this->draw(renderer, _modelViewTransform, flags);
     }
 
-    _afterVisitCmd.init(_globalZOrder);
+    _afterVisitCmd.init(_displayedGlobalZOrder);
     _afterVisitCmd.func = CC_CALLBACK_0(StencilStateManager::onAfterVisit, _stencilStateManager);
     renderer->addCommand(&_afterVisitCmd);
 

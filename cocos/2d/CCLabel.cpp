@@ -1708,13 +1708,13 @@ void Label::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
             // ETC1 ALPHA supports for BMFONT & CHARMAP
             auto textureAtlas = _batchNodes.at(0)->getTextureAtlas();
             auto texture = textureAtlas->getTexture();
-            _quadCommand.init(_globalZOrder, texture, getGLProgramState(), 
+            _quadCommand.init(_displayedGlobalZOrder, texture, getGLProgramState(), 
                 _blendFunc, textureAtlas->getQuads(), textureAtlas->getTotalQuads(), transform, flags);
             renderer->addCommand(&_quadCommand);
         }
         else
         {
-            _customCommand.init(_globalZOrder, transform, flags);
+            _customCommand.init(_displayedGlobalZOrder, transform, flags);
             _customCommand.func = CC_CALLBACK_0(Label::onDraw, this, transform, transformUpdated);
 
             renderer->addCommand(&_customCommand);
