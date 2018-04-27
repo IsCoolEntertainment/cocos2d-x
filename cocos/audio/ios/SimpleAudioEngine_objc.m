@@ -73,6 +73,9 @@ static CDBufferManager *bufferManager = nil;
 
 +(void) end 
 {
+    if(sharedEngine == nil)
+        return;
+
     am = nil;
     [CDAudioManager end];
     [bufferManager release];
