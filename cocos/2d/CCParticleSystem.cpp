@@ -223,6 +223,7 @@ ParticleSystem::ParticleSystem()
 , _positionType(PositionType::FREE)
 , _paused(false)
 , _sourcePositionCompatible(true) // In the furture this member's default value maybe false or be removed.
+, _inactiveWhenHidden(false)
 {
     modeA.gravity.setZero();
     modeA.speed = 0;
@@ -872,6 +873,9 @@ bool ParticleSystem::isFull()
 // ParticleSystem - MainLoop
 void ParticleSystem::update(float dt)
 {
+    if ( _inactiveWhenHidden && !isVisible() )
+        return;
+    
     CC_PROFILER_START_CATEGORY(kProfilerCategoryParticles , "CCParticleSystem - update");
 
     if (_isActive && _emissionRate)
@@ -1407,6 +1411,14 @@ void ParticleSystem::resumeEmissions()
     _paused = false;
 }
 
+void ParticleSystem::setInactiveWhenHidden(bool value)
+{
+    _inactiveWhenHidden = value;
+}
 
+bool ParticleSystem::getInactiveWhenHidden()
+{
+    return _inactiveWhenHidden;
+}
 
 NS_CC_END

@@ -775,6 +775,9 @@ public:
     
     void setSourcePositionCompatible(bool sourcePositionCompatible) { _sourcePositionCompatible = sourcePositionCompatible; }
     bool isSourcePositionCompatible() const { return _sourcePositionCompatible; }
+
+    void setInactiveWhenHidden(bool value);
+    bool getInactiveWhenHidden();
     
 CC_CONSTRUCTOR_ACCESS:
     /**
@@ -991,6 +994,8 @@ protected:
     /** is sourcePosition compatible */
     bool _sourcePositionCompatible;
 
+    bool _inactiveWhenHidden;
+    
     static Vector<ParticleSystem*> __allInstances;
     
 private:
