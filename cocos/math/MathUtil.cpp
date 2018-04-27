@@ -74,7 +74,7 @@ This file was modified to fit the cocos2d-x project
 
 NS_CC_MATH_BEGIN
 
-void MathUtil::smooth(float* x, float target, float elapsedTime, float responseTime)
+void __attribute__ ((noinline)) MathUtil::smooth(float* x, float target, float elapsedTime, float responseTime)
 {
     GP_ASSERT(x);
     
@@ -84,7 +84,7 @@ void MathUtil::smooth(float* x, float target, float elapsedTime, float responseT
     }
 }
 
-void MathUtil::smooth(float* x, float target, float elapsedTime, float riseTime, float fallTime)
+void __attribute__ ((noinline)) MathUtil::smooth(float* x, float target, float elapsedTime, float riseTime, float fallTime)
 {
     GP_ASSERT(x);
     
@@ -95,12 +95,12 @@ void MathUtil::smooth(float* x, float target, float elapsedTime, float riseTime,
     }
 }
 
-float MathUtil::lerp(float from, float to, float alpha)
+float __attribute__ ((noinline)) MathUtil::lerp(float from, float to, float alpha)
 {
     return from * (1.0f - alpha) + to * alpha;
 }
 
-bool MathUtil::isNeon32Enabled()
+bool __attribute__ ((noinline)) MathUtil::isNeon32Enabled()
 {
 #ifdef USE_NEON32
     return true;
@@ -126,7 +126,7 @@ bool MathUtil::isNeon32Enabled()
 #endif
 }
 
-bool MathUtil::isNeon64Enabled()
+bool __attribute__ ((noinline)) MathUtil::isNeon64Enabled()
 {
 #ifdef USE_NEON64
     return true;
@@ -135,7 +135,7 @@ bool MathUtil::isNeon64Enabled()
 #endif
 }
 
-void MathUtil::addMatrix(const float* m, float scalar, float* dst)
+void __attribute__ ((noinline)) MathUtil::addMatrix(const float* m, float scalar, float* dst)
 {
 #ifdef USE_NEON32
     MathUtilNeon::addMatrix(m, scalar, dst);
@@ -149,7 +149,7 @@ void MathUtil::addMatrix(const float* m, float scalar, float* dst)
 #endif
 }
 
-void MathUtil::addMatrix(const float* m1, const float* m2, float* dst)
+void __attribute__ ((noinline)) MathUtil::addMatrix(const float* m1, const float* m2, float* dst)
 {
 #ifdef USE_NEON32
     MathUtilNeon::addMatrix(m1, m2, dst);
@@ -163,7 +163,7 @@ void MathUtil::addMatrix(const float* m1, const float* m2, float* dst)
 #endif
 }
 
-void MathUtil::subtractMatrix(const float* m1, const float* m2, float* dst)
+void __attribute__ ((noinline)) MathUtil::subtractMatrix(const float* m1, const float* m2, float* dst)
 {
 #ifdef USE_NEON32
     MathUtilNeon::subtractMatrix(m1, m2, dst);
@@ -177,7 +177,7 @@ void MathUtil::subtractMatrix(const float* m1, const float* m2, float* dst)
 #endif
 }
 
-void MathUtil::multiplyMatrix(const float* m, float scalar, float* dst)
+void __attribute__ ((noinline)) MathUtil::multiplyMatrix(const float* m, float scalar, float* dst)
 {
 #ifdef USE_NEON32
     MathUtilNeon::multiplyMatrix(m, scalar, dst);
@@ -191,7 +191,7 @@ void MathUtil::multiplyMatrix(const float* m, float scalar, float* dst)
 #endif
 }
 
-void MathUtil::multiplyMatrix(const float* m1, const float* m2, float* dst)
+void __attribute__ ((noinline)) MathUtil::multiplyMatrix(const float* m1, const float* m2, float* dst)
 {
 #ifdef USE_NEON32
     MathUtilNeon::multiplyMatrix(m1, m2, dst);
@@ -205,7 +205,7 @@ void MathUtil::multiplyMatrix(const float* m1, const float* m2, float* dst)
 #endif
 }
 
-void MathUtil::negateMatrix(const float* m, float* dst)
+void __attribute__ ((noinline)) MathUtil::negateMatrix(const float* m, float* dst)
 {
 #ifdef USE_NEON32
     MathUtilNeon::negateMatrix(m, dst);
@@ -219,7 +219,7 @@ void MathUtil::negateMatrix(const float* m, float* dst)
 #endif
 }
 
-void MathUtil::transposeMatrix(const float* m, float* dst)
+void __attribute__ ((noinline)) MathUtil::transposeMatrix(const float* m, float* dst)
 {
 #ifdef USE_NEON32
     MathUtilNeon::transposeMatrix(m, dst);
@@ -233,7 +233,7 @@ void MathUtil::transposeMatrix(const float* m, float* dst)
 #endif
 }
 
-void MathUtil::transformVec4(const float* m, float x, float y, float z, float w, float* dst)
+void __attribute__ ((noinline)) MathUtil::transformVec4(const float* m, float x, float y, float z, float w, float* dst)
 {
 #ifdef USE_NEON32
     MathUtilNeon::transformVec4(m, x, y, z, w, dst);
@@ -247,7 +247,7 @@ void MathUtil::transformVec4(const float* m, float x, float y, float z, float w,
 #endif
 }
 
-void MathUtil::transformVec4(const float* m, const float* v, float* dst)
+void __attribute__ ((noinline)) MathUtil::transformVec4(const float* m, const float* v, float* dst)
 {
 #ifdef USE_NEON32
     MathUtilNeon::transformVec4(m, v, dst);
@@ -261,7 +261,7 @@ void MathUtil::transformVec4(const float* m, const float* v, float* dst)
 #endif
 }
 
-void MathUtil::crossVec3(const float* v1, const float* v2, float* dst)
+void __attribute__ ((noinline)) MathUtil::crossVec3(const float* v1, const float* v2, float* dst)
 {
 #ifdef USE_NEON32
     MathUtilNeon::crossVec3(v1, v2, dst);
