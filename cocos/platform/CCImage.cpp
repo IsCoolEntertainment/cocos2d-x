@@ -2452,13 +2452,15 @@ void Image::premultipliedAlpha()
         return;
 #else
     CCASSERT(_renderFormat == Texture2D::PixelFormat::RGBA8888, "The pixel format should be RGBA8888!");
-    
+
+#if CC_ENABLE_PREMULTIPLY_IMAGE_ALPHA
     unsigned int* fourBytes = (unsigned int*)_data;
     for(int i = 0; i < _width * _height; i++)
     {
         unsigned char* p = _data + i * 4;
         fourBytes[i] = CC_RGB_PREMULTIPLY_ALPHA(p[0], p[1], p[2], p[3]);
     }
+#endif
     
     _hasPremultipliedAlpha = true;
 #endif
