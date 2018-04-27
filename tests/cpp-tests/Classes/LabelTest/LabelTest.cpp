@@ -119,7 +119,7 @@ Atlas1::~Atlas1()
 
 void Atlas1::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
 {
-    _customCommand.init(_globalZOrder);
+    _customCommand.init(_displayedGlobalZOrder);
     _customCommand.func = CC_CALLBACK_0(Atlas1::onDraw, this, transform, flags);
     renderer->addCommand(&_customCommand);
 }

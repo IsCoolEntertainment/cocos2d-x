@@ -170,7 +170,7 @@ void BatchNode::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
 void BatchNode::generateGroupCommand()
 {
     Renderer* renderer = Director::getInstance()->getRenderer();
-    _groupCommand->init(_globalZOrder);
+    _groupCommand->init(_displayedGlobalZOrder);
     renderer->addCommand(_groupCommand);
 
     renderer->pushGroup(_groupCommand->getRenderQueueID());

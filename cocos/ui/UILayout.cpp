@@ -178,7 +178,7 @@ void Layout::addChild(Node *child, int zOrder, int tag)
     if (dynamic_cast<Widget*>(child)) {
         supplyTheLayoutParameterLackToChild(static_cast<Widget*>(child));
     }
-    child->setGlobalZOrder(_globalZOrder);
+    child->setGlobalZOrder(_displayedGlobalZOrder);
     Widget::addChild(child, zOrder, tag);
     _doLayoutDirty = true;
 }
@@ -188,7 +188,7 @@ void Layout::addChild(Node* child, int zOrder, const std::string &name)
     if (dynamic_cast<Widget*>(child)) {
         supplyTheLayoutParameterLackToChild(static_cast<Widget*>(child));
     }
-    child->setGlobalZOrder(_globalZOrder);
+    child->setGlobalZOrder(_displayedGlobalZOrder);
     Widget::addChild(child, zOrder, name);
     _doLayoutDirty = true;
 }
@@ -262,18 +262,18 @@ void Layout::stencilClippingVisit(Renderer *renderer, const Mat4& parentTransfor
     director->loadMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW, _modelViewTransform);
     //Add group command
 
-    _groupCommand.init(_globalZOrder);
+    _groupCommand.init(_displayedGlobalZOrder);
     renderer->addCommand(&_groupCommand);
     
     renderer->pushGroup(_groupCommand.getRenderQueueID());
     
-    _beforeVisitCmdStencil.init(_globalZOrder);
+    _beforeVisitCmdStencil.init(_displayedGlobalZOrder);
     _beforeVisitCmdStencil.func = CC_CALLBACK_0(StencilStateManager::onBeforeVisit, _stencilStateManager);
     renderer->addCommand(&_beforeVisitCmdStencil);
     
     _clippingStencil->visit(renderer, _modelViewTransform, flags);
     
-    _afterDrawStencilCmd.init(_globalZOrder);
+    _afterDrawStencilCmd.init(_displayedGlobalZOrder);
     _afterDrawStencilCmd.func = CC_CALLBACK_0(StencilStateManager::onAfterDrawStencil, _stencilStateManager);
     renderer->addCommand(&_afterDrawStencilCmd);
     
@@ -321,7 +321,7 @@ void Layout::stencilClippingVisit(Renderer *renderer, const Mat4& parentTransfor
         (*it)->visit(renderer, _modelViewTransform, flags);
 
     
-    _afterVisitCmdStencil.init(_globalZOrder);
+    _afterVisitCmdStencil.init(_displayedGlobalZOrder);
     _afterVisitCmdStencil.func = CC_CALLBACK_0(StencilStateManager::onAfterVisit, _stencilStateManager);
     renderer->addCommand(&_afterVisitCmdStencil);
     
@@ -379,13 +379,13 @@ void Layout::scissorClippingVisit(Renderer *renderer, const Mat4& parentTransfor
     {
         _clippingRectDirty = true;
     }
-    _beforeVisitCmdScissor.init(_globalZOrder);
+    _beforeVisitCmdScissor.init(_displayedGlobalZOrder);
     _beforeVisitCmdScissor.func = CC_CALLBACK_0(Layout::onBeforeVisitScissor, this);
     renderer->addCommand(&_beforeVisitCmdScissor);
 
     ProtectedNode::visit(renderer, parentTransform, parentFlags);
     
-    _afterVisitCmdScissor.init(_globalZOrder);
+    _afterVisitCmdScissor.init(_displayedGlobalZOrder);
     _afterVisitCmdScissor.func = CC_CALLBACK_0(Layout::onAfterVisitScissor, this);
     renderer->addCommand(&_afterVisitCmdScissor);
 }
@@ -403,7 +403,7 @@ void Layout::setClippingEnabled(bool able)
             if (able)
             {
                 _clippingStencil = DrawNode::create();
-                _clippingStencil->setGlobalZOrder(_globalZOrder);
+                _clippingStencil->setGlobalZOrder(_displayedGlobalZOrder);
                 if (_running)
                 {
                     _clippingStencil->onEnter();

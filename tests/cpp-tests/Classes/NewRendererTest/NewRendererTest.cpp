@@ -164,7 +164,7 @@ SpriteInGroupCommand* SpriteInGroupCommand::create(const std::string &filename)
 void SpriteInGroupCommand::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
 {
     CCASSERT(renderer, "Render is null");
-    _spriteWrapperCommand.init(_globalZOrder);
+    _spriteWrapperCommand.init(_displayedGlobalZOrder);
     renderer->addCommand(&_spriteWrapperCommand);
     renderer->pushGroup(_spriteWrapperCommand.getRenderQueueID());
     Sprite::draw(renderer, transform, flags);

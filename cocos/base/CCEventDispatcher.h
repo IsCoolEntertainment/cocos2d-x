@@ -327,7 +327,7 @@ protected:
     std::unordered_map<Node*, int> _nodePriorityMap;
     
     /** key: Global Z Order, value: Sorted Nodes */
-    std::unordered_map<float, std::vector<Node*>> _globalZOrderNodeMap;
+    std::unordered_map<float, std::vector<Node*>> _displayedGlobalZOrderNodeMap;
     
     /** The listeners to be added after dispatching event */
     std::vector<EventListener*> _toAddedListeners;

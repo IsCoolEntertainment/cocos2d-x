@@ -78,7 +78,8 @@ Node::Node()
 // children (lazy allocs)
 // lazy alloc
 , _localZOrder$Arrival(0LL)
-, _globalZOrder(0)
+, _displayedGlobalZOrder(0)
+, _realGlobalZOrder(0)
 , _parent(nullptr)
 // "whole screen" objects. like Scenes and Layers, should set _ignoreAnchorPointForPosition to true
 , _tag(Node::INVALID_TAG)
@@ -120,6 +121,7 @@ Node::Node()
 , _isTransitionFinished(false)
 , _cascadeColorEnabled(false)
 , _cascadeOpacityEnabled(false)
+, _cascadeGlobalZOrderEnabled(false)
 {
     // set default scheduler and actionManager
     _director = Director::getInstance();
@@ -288,11 +290,72 @@ void Node::updateOrderOfArrival()
 
 void Node::setGlobalZOrder(float globalZOrder)
 {
-    if (_globalZOrder != globalZOrder)
+    _displayedGlobalZOrder = _realGlobalZOrder = globalZOrder;
+
+    updateCascadeGlobalZOrder();
+}
+
+float Node::getGlobalZOrder() const
+{
+    return _realGlobalZOrder;
+}
+
+float Node::getDisplayedGlobalZOrder() const
+{
+    return _displayedGlobalZOrder;
+}
+
+void Node::updateDisplayedGlobalZOrder(float parentGlobalZOrder)
+{
+    _displayedGlobalZOrder = parentGlobalZOrder + _realGlobalZOrder;
+
+    if (_cascadeGlobalZOrderEnabled)
     {
-        _globalZOrder = globalZOrder;
-        _eventDispatcher->setDirtyForNode(this);
+        for(const auto& child : _children)
+        {
+            child->updateDisplayedGlobalZOrder(_displayedGlobalZOrder);
+        }
     }
+
+    _eventDispatcher->setDirtyForNode(this);
+}
+
+bool Node::isCascadeGlobalZOrderEnabled(void) const
+{
+    return _cascadeGlobalZOrderEnabled;
+}
+
+void Node::setCascadeGlobalZOrderEnabled(bool cascadeGlobalZOrderEnabled)
+{
+    if (_cascadeGlobalZOrderEnabled == cascadeGlobalZOrderEnabled)
+        return;
+
+    _cascadeGlobalZOrderEnabled = cascadeGlobalZOrderEnabled;
+
+    if (cascadeGlobalZOrderEnabled)
+        updateCascadeGlobalZOrder();
+    else
+        disableCascadeGlobalZOrder();
+}
+
+void Node::updateCascadeGlobalZOrder()
+{
+    float parentGlobalZOrder = 0;
+
+    if (_parent && _parent->isCascadeGlobalZOrderEnabled())
+    {
+        parentGlobalZOrder = _parent->getDisplayedGlobalZOrder();
+    }
+
+    updateDisplayedGlobalZOrder(parentGlobalZOrder);
+}
+
+void Node::disableCascadeGlobalZOrder()
+{
+    _displayedGlobalZOrder = _realGlobalZOrder;
+
+    for(const auto& child : _children )
+        child->updateDisplayedGlobalZOrder(0);
 }
 
 /// rotation getter

@@ -559,7 +559,7 @@ void RawStencilBufferTest::draw(Renderer *renderer, const Mat4 &transform, uint3
     
     auto iter = _renderCmds.begin();
     
-    iter->init(_globalZOrder);
+    iter->init(_displayedGlobalZOrder);
     iter->func = CC_CALLBACK_0(RawStencilBufferTest::onEnableStencil, this);
     renderer->addCommand(&(*iter));
     ++iter;
@@ -575,7 +575,7 @@ void RawStencilBufferTest::draw(Renderer *renderer, const Mat4 &transform, uint3
         _sprites.at(i)->setPosition( spritePoint );
         _spritesStencil.at(i)->setPosition( spritePoint );
 
-        iter->init(_globalZOrder);
+        iter->init(_displayedGlobalZOrder);
         iter->func = CC_CALLBACK_0(RawStencilBufferTest::onBeforeDrawClip, this, i, stencilPoint);
         renderer->addCommand(&(*iter));
         ++iter;
@@ -588,7 +588,7 @@ void RawStencilBufferTest::draw(Renderer *renderer, const Mat4 &transform, uint3
         _spritesStencil.at(i)->visit(renderer, _modelViewTransform, flags);
         director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
                 
-        iter->init(_globalZOrder);
+        iter->init(_displayedGlobalZOrder);
         iter->func = CC_CALLBACK_0(RawStencilBufferTest::onBeforeDrawSprite, this, i, winPoint);
         renderer->addCommand(&(*iter));
         ++iter;
@@ -599,7 +599,7 @@ void RawStencilBufferTest::draw(Renderer *renderer, const Mat4 &transform, uint3
         director->popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
     }
     
-    iter->init(_globalZOrder);
+    iter->init(_displayedGlobalZOrder);
     iter->func = CC_CALLBACK_0(RawStencilBufferTest::onDisableStencil, this);
     renderer->addCommand(&(*iter));
 }

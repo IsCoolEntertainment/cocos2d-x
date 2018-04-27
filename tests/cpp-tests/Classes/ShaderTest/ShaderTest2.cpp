@@ -97,20 +97,20 @@ public:
                 if (glProgramState)
                 {
                     QuadCommand &q = std::get<2>(effect);
-                    q.init(_globalZOrder, _texture->getName(), glProgramState, _blendFunc, &_quad, 1, transform, flags);
+                    q.init(_displayedGlobalZOrder, _texture->getName(), glProgramState, _blendFunc, &_quad, 1, transform, flags);
                     renderer->addCommand(&q);
                 }
                 idx++;
             }
 
             // normal effect: order == 0
-            _trianglesCommand.init(_globalZOrder, _texture->getName(), getGLProgramState(), _blendFunc, _polyInfo.triangles, transform, flags);
+            _trianglesCommand.init(_displayedGlobalZOrder, _texture->getName(), getGLProgramState(), _blendFunc, _polyInfo.triangles, transform, flags);
             renderer->addCommand(&_trianglesCommand);
 
             // positive effects: order >= 0
             for(auto it = std::begin(_effects)+idx; it != std::end(_effects); ++it) {
                 QuadCommand &q = std::get<2>(*it);
-                q.init(_globalZOrder, _texture->getName(), std::get<1>(*it)->getGLProgramState(), _blendFunc, &_quad, 1, transform, flags);
+                q.init(_displayedGlobalZOrder, _texture->getName(), std::get<1>(*it)->getGLProgramState(), _blendFunc, &_quad, 1, transform, flags);
                 renderer->addCommand(&q);
                 idx++;
             }

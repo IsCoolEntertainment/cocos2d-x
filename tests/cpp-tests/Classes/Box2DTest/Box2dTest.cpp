@@ -152,7 +152,7 @@ void Box2DTest::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
     
     _modelViewMV = director->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 
-    _customCommand.init(_globalZOrder);
+    _customCommand.init(_displayedGlobalZOrder);
     _customCommand.func = CC_CALLBACK_0(Box2DTest::onDraw, this);
     renderer->addCommand(&_customCommand);
 
