@@ -59,7 +59,7 @@ DrawPrimitivesTest::DrawPrimitivesTest()
 
 void DrawPrimitivesTest::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
 {
-    _customCommand.init(_globalZOrder);
+    _customCommand.init(_displayedGlobalZOrder);
     _customCommand.func = CC_CALLBACK_0(DrawPrimitivesTest::onDraw, this, transform, flags);
     renderer->addCommand(&_customCommand);
 }
@@ -392,7 +392,7 @@ PrimitivesCommandTest::~PrimitivesCommandTest()
 
 void PrimitivesCommandTest::draw(Renderer* renderer, const Mat4& transform, uint32_t flags)
 {
-    _primitiveCommand.init(_globalZOrder,
+    _primitiveCommand.init(_displayedGlobalZOrder,
                            _texture->getName(),
                            _programState,
                            BlendFunc::ALPHA_NON_PREMULTIPLIED,

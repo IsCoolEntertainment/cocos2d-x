@@ -1077,7 +1077,7 @@ void Sprite::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
     if(_insideBounds)
 #endif
     {
-        _trianglesCommand.init(_globalZOrder,
+        _trianglesCommand.init(_displayedGlobalZOrder,
                                _texture,
                                getGLProgramState(),
                                _blendFunc,

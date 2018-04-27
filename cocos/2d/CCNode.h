@@ -227,8 +227,13 @@ public:
      *
      * @return The node's global Z order
      */
-    virtual float getGlobalZOrder() const { return _globalZOrder; }
+    virtual float getGlobalZOrder() const;
+    virtual float getDisplayedGlobalZOrder() const;
 
+    virtual void updateDisplayedGlobalZOrder(float parentGlobalZOrder);
+    virtual bool isCascadeGlobalZOrderEnabled() const;
+    virtual void setCascadeGlobalZOrderEnabled(bool cascadeGlobalZOrderEnabled);
+    
     /**
      * Sets the scale (x) of the node.
      *
@@ -1882,6 +1887,8 @@ protected:
     Mat4 transform(const Mat4 &parentTransform);
     uint32_t processParentFlags(const Mat4& parentTransform, uint32_t parentFlags);
 
+    virtual void updateCascadeGlobalZOrder();
+    virtual void disableCascadeGlobalZOrder();
     virtual void updateCascadeOpacity();
     virtual void disableCascadeOpacity();
     virtual void updateCascadeColor();
@@ -1954,7 +1961,8 @@ protected:
     };
 #endif
 
-    float _globalZOrder;            ///< Global order used to sort the node
+    float _displayedGlobalZOrder;   ///< Global order used to sort the node
+    float _realGlobalZOrder;
 
     static std::uint32_t s_globalOrderOfArrival;
 
@@ -2020,6 +2028,7 @@ protected:
     bool _isTransitionFinished:1;       ///< flag to indicate whether the transition was finished
     bool        _cascadeColorEnabled:1;
     bool        _cascadeOpacityEnabled:1;
+    bool        _cascadeGlobalZOrderEnabled:1;
 
 //Physics:remaining backwardly compatible  
 #if CC_USE_PHYSICS

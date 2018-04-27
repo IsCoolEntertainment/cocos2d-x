@@ -247,7 +247,7 @@ void EventDispatcher::visitTarget(Node* node, bool isRootNode)
         
         if (_nodeListenersMap.find(node) != _nodeListenersMap.end())
         {
-            _globalZOrderNodeMap[node->getGlobalZOrder()].push_back(node);
+            _displayedGlobalZOrderNodeMap[node->getGlobalZOrder()].push_back(node);
         }
         
         for( ; i < childrenCount; i++ )
@@ -261,16 +261,16 @@ void EventDispatcher::visitTarget(Node* node, bool isRootNode)
     {
         if (_nodeListenersMap.find(node) != _nodeListenersMap.end())
         {
-            _globalZOrderNodeMap[node->getGlobalZOrder()].push_back(node);
+            _displayedGlobalZOrderNodeMap[node->getGlobalZOrder()].push_back(node);
         }
     }
     
     if (isRootNode)
     {
         std::vector<float> globalZOrders;
-        globalZOrders.reserve(_globalZOrderNodeMap.size());
+        globalZOrders.reserve(_displayedGlobalZOrderNodeMap.size());
         
-        for (const auto& e : _globalZOrderNodeMap)
+        for (const auto& e : _displayedGlobalZOrderNodeMap)
         {
             globalZOrders.push_back(e.first);
         }
@@ -281,13 +281,13 @@ void EventDispatcher::visitTarget(Node* node, bool isRootNode)
         
         for (const auto& globalZ : globalZOrders)
         {
-            for (const auto& n : _globalZOrderNodeMap[globalZ])
+            for (const auto& n : _displayedGlobalZOrderNodeMap[globalZ])
             {
                 _nodePriorityMap[n] = ++_nodePriorityIndex;
             }
         }
         
-        _globalZOrderNodeMap.clear();
+        _displayedGlobalZOrderNodeMap.clear();
     }
 }
 
