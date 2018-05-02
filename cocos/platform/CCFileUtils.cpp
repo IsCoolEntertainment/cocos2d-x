@@ -42,6 +42,19 @@ THE SOFTWARE.
 #endif
 #include <sys/stat.h>
 
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32) && (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
+#include "tinydir/tinydir.h"
+// default implements for unix like os
+#include <sys/types.h>
+#include <errno.h>
+#include <dirent.h>
+
+// android doesn't have ftw.h
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_ANDROID)
+#include <ftw.h>
+#endif
+#endif
+
 #define DECLARE_GUARD std::lock_guard<std::recursive_mutex> mutexGuard(_mutex)
 
 NS_CC_BEGIN
@@ -1310,16 +1323,6 @@ void FileUtils::listFilesRecursively(const std::string& dirPath, std::vector<std
 }
 
 #else
-#include "tinydir/tinydir.h"
-// default implements for unix like os
-#include <sys/types.h>
-#include <errno.h>
-#include <dirent.h>
-
-// android doesn't have ftw.h
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_ANDROID)
-#include <ftw.h>
-#endif
 
 bool FileUtils::isDirectoryExistInternal(const std::string& dirPath) const
 {
