@@ -178,11 +178,13 @@ THE SOFTWARE.
 #include "renderer/ccShaders.h"
 
 // physics
+#if CC_USE_PHYSICS
 #include "physics/CCPhysicsBody.h"
 #include "physics/CCPhysicsContact.h"
 #include "physics/CCPhysicsJoint.h"
 #include "physics/CCPhysicsShape.h"
 #include "physics/CCPhysicsWorld.h"
+#endif
 
 // platform
 #include "platform/CCCommon.h"
