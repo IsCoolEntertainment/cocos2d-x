@@ -46,3 +46,5 @@ AssetFd::~AssetFd()
 };
 
 }} // namespace cocos2d { namespace experimental {
+
+#undef LOG_TAG
