@@ -31,6 +31,7 @@
 #include "network/WebSocket.h"
 #include "network/Uri.h"
 #include "base/CCDirector.h"
+#include "base/ccMacros.h"
 #include "base/CCScheduler.h"
 #include "base/CCEventDispatcher.h"
 #include "base/CCEventListenerCustom.h"
@@ -118,9 +119,6 @@ static void wsLog(const char * format, ...)
 #define wsLog printf
 #endif
 
-#define QUOTEME_(x) #x
-#define QUOTEME(x) QUOTEME_(x)
-
 // Since CCLOG isn't thread safe, we uses LOGD for multi-thread logging.
 #ifdef ANDROID
     #ifdef WEBSOCKETS_LOGGING
@@ -132,12 +130,12 @@ static void wsLog(const char * format, ...)
     #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG,__VA_ARGS__)
 #else
     #ifdef WEBSOCKETS_LOGGING
-        #define LOGD(fmt, ...) wsLog("D/" LOG_TAG " (" QUOTEME(__LINE__) "): " fmt "", ##__VA_ARGS__)
+        #define LOGD(fmt, ...) wsLog("D/" LOG_TAG " (" CC_QUOTEME(__LINE__) "): " fmt "", ##__VA_ARGS__)
     #else
         #define LOGD(fmt, ...)
     #endif
 
-    #define LOGE(fmt, ...) wsLog("E/" LOG_TAG " (" QUOTEME(__LINE__) "): " fmt "", ##__VA_ARGS__)
+    #define LOGE(fmt, ...) wsLog("E/" LOG_TAG " (" CC_QUOTEME(__LINE__) "): " fmt "", ##__VA_ARGS__)
 #endif
 
 #ifdef WEBSOCKETS_LOGGING
@@ -1360,6 +1358,5 @@ NS_NETWORK_END
 #undef WS_RESERVE_RECEIVE_BUFFER_SIZE
 
 #undef  LOG_TAG
-#undef QUOTEME
 #undef LOGD
 #undef LOGE
