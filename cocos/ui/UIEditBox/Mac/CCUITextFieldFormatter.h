@@ -22,6 +22,8 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
+#ifndef __CCUIEDITBOXFORMATTER_H__
+#define __CCUIEDITBOXFORMATTER_H__
 
 #import <Foundation/Foundation.h>
 
@@ -33,3 +35,5 @@
 @property (nonatomic, assign) int maximumLength;
 
 @end
+
+#endif
