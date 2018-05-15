@@ -64,6 +64,9 @@ static ALenum alSourceAddNotificationExt(ALuint sid, ALuint notificationID, alSo
 }
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+
+#include <UIKit/UIKit.h>
+
 @interface AudioEngineSessionHandler : NSObject
 {
 }
