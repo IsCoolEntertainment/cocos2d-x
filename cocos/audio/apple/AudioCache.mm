@@ -52,7 +52,7 @@ unsigned int __cacheIdIndex = 0;
 #define PCMDATA_CACHEMAXSIZE 1048576
 
 typedef ALvoid	AL_APIENTRY	(*alBufferDataStaticProcPtr) (const ALint bid, ALenum format, ALvoid* data, ALsizei size, ALsizei freq);
-static ALvoid  alBufferDataStaticProc(const ALint bid, ALenum format, ALvoid* data, ALsizei size, ALsizei freq)
+static ALvoid  alBufferDataStaticProc_apple(const ALint bid, ALenum format, ALvoid* data, ALsizei size, ALsizei freq)
 {
     static alBufferDataStaticProcPtr proc = nullptr;
 
@@ -169,7 +169,7 @@ AudioCache::~AudioCache()
         }
 
         // fixed #17494: CrashIfClientProvidedBogusAudioBufferList
-        // We're using 'alBufferDataStaticProc' for speeding up
+        // We're using 'alBufferDataStaticProc_apple' for speeding up
         // the performance of playing audio without preload, but we need to manage the memory by ourself carefully.
         // It's probably that '_pcmData' is freed before OpenAL finishes the audio render task,
         // then 'CrashIfClientProvidedBogusAudioBufferList' may be triggered.
@@ -277,7 +277,7 @@ void AudioCache::readDataTask(unsigned int selfId)
             if (*_isDestroyed)
                 break;
 
-            alBufferDataStaticProc(_alBufferId, _format, _pcmData, (ALsizei)dataSize, (ALsizei)sampleRate);
+            alBufferDataStaticProc_apple(_alBufferId, _format, _pcmData, (ALsizei)dataSize, (ALsizei)sampleRate);
 
             framesRead = decoder.readFixedFrames(std::min(framesToReadOnce, remainingFrames), _pcmData + _framesRead * bytesPerFrame);
             _framesRead += framesRead;
