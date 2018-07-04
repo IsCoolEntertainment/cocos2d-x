@@ -303,6 +303,8 @@ public:
      * Sets a new SpriteFrame to the Sprite.
      */
     virtual void setSpriteFrame(const std::string &spriteFrameName);
+    virtual void replaceSpriteFrame(const std::string &spriteFrameName);
+    
     virtual void setSpriteFrame(SpriteFrame* newFrame);
     /** @} */
 

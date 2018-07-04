@@ -1579,6 +1579,13 @@ void Sprite::setSpriteFrame(const std::string &spriteFrameName)
     setSpriteFrame(spriteFrame);
 }
 
+void Sprite::replaceSpriteFrame(const std::string &spriteFrameName)
+{
+    const Size size(getContentSize());
+    setSpriteFrame(spriteFrameName);
+    setContentSize(size);
+}
+
 void Sprite::setSpriteFrame(SpriteFrame *spriteFrame)
 {
     // retain the sprite frame
