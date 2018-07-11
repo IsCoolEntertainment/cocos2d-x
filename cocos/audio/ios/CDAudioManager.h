@@ -33,6 +33,7 @@
 typedef enum {
     kAMM_FxOnly,                    //!Other apps will be able to play audio
     kAMM_FxPlusMusic,                //!Only this app will play audio
+    kAMM_FxPlusMixedMusic,                //!This app's audio will be mixed with the other apps.
     kAMM_FxPlusMusicIfNoOtherAudio,    //!If another app is playing audio at start up then allow it to continue and don't play music
     kAMM_MediaPlayback,                //!This app takes over audio e.g music player app
     kAMM_PlayAndRecord                //!App takes over audio and has input and output
