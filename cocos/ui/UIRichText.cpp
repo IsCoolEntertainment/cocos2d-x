@@ -43,8 +43,11 @@
 
 #include "platform/CCSAXParser.h"
 
-USING_NS_CC;
-using namespace cocos2d::ui;
+namespace cocos2d
+{
+
+namespace ui
+{
 
 class ListenerComponent : public Component
 {
@@ -1967,4 +1970,7 @@ void RichText::ignoreContentAdaptWithSize(bool ignore)
 std::string RichText::getDescription() const
 {
     return "RichText";
+}
+
+}
 }
