@@ -550,6 +550,22 @@ public:
      */
     void setOpenUrlHandler(const OpenUrlHandler& handleOpenUrl);
 
+    void onTouchEnded(Touch* touch, Event*) override;
+
+protected:
+    class UrlTouchListener
+    {
+    public:
+        UrlTouchListener(Node* parent, std::string url, RichText::OpenUrlHandler handleOpenUrl);
+        ~UrlTouchListener();
+        void onTouchEnded(Touch* touch) const;
+
+    private:
+        Node* _parent;
+        std::string _url;
+        RichText::OpenUrlHandler _handleOpenUrl;
+    };
+    
 CC_CONSTRUCTOR_ACCESS:
     virtual bool init() override;
 
@@ -580,6 +596,8 @@ protected:
 
     ValueMap _defaults;             /*!< default values */
     OpenUrlHandler _handleOpenUrl;  /*!< the callback for open URL */
+
+    std::vector<UrlTouchListener> _urlTouchListeners;
 };
     
 }
