@@ -892,6 +892,33 @@ RichText* RichText::createWithXML(const std::string& xml, const ValueMap& defaul
     return nullptr;
 }
 
+bool RichText::setXMLText(const std::string& origxml)
+{
+    static std::function<std::string(RichText*)> startTagFont = [](RichText* richText) {
+        std::string fontFace = richText->getFontFace();
+        std::stringstream ss;
+        ss << richText->getFontSize();
+        std::string fontSize = ss.str();
+        std::string fontColor = richText->getFontColor();
+        return "<font face=\"" + fontFace + "\" size=\"" + fontSize + "\" color=\"" + fontColor + "\">";
+    };
+
+    _richElements.clear();
+    _formatTextDirty = true;
+    
+    // solves to issues:
+    //  - creates defaults values
+    //  - makes sure that the xml well formed and starts with an element
+    std::string xml = startTagFont(this);
+    xml += origxml;
+    xml += "</font>";
+
+    MyXMLVisitor visitor(this);
+    SAXParser parser;
+    parser.setDelegator(&visitor);
+    return parser.parseIntrusive(&xml.front(), xml.length());
+}
+
 bool RichText::init()
 {
     if (Widget::init())
@@ -903,30 +930,12 @@ bool RichText::init()
 
 bool RichText::initWithXML(const std::string& origxml, const ValueMap& defaults, const OpenUrlHandler& handleOpenUrl)
 {
-    static std::function<std::string(RichText*)> startTagFont = [](RichText* richText) {
-        std::string fontFace = richText->getFontFace();
-        std::stringstream ss;
-        ss << richText->getFontSize();
-        std::string fontSize = ss.str();
-        std::string fontColor = richText->getFontColor();
-        return "<font face=\"" + fontFace + "\" size=\"" + fontSize + "\" color=\"" + fontColor + "\">";
-    };
     if (Widget::init())
     {
         setDefaults(defaults);
         setOpenUrlHandler(handleOpenUrl);
 
-        // solves to issues:
-        //  - creates defaults values
-        //  - makes sure that the xml well formed and starts with an element
-        std::string xml = startTagFont(this);
-        xml += origxml;
-        xml += "</font>";
-
-        MyXMLVisitor visitor(this);
-        SAXParser parser;
-        parser.setDelegator(&visitor);
-        return parser.parseIntrusive(&xml.front(), xml.length());
+        return setXMLText(origxml);
     }
     return false;
 }

@@ -438,6 +438,8 @@ public:
      */
     static RichText* createWithXML(const std::string& xml, const ValueMap& defaults = ValueMap(), const OpenUrlHandler& handleOpenUrl = nullptr);
 
+    bool setXMLText(const std::string& xml);
+    
     /**
      * @brief Insert a RichElement at a given index.
      *
