@@ -218,6 +218,16 @@ public:
      */
     void releaseGLTexture();
 
+    /** Initializes with a texture2d with no data.
+     
+     @param pixelFormat The image pixelFormat.
+     @param pixelsWide The image width.
+     @param pixelsHigh The image height.
+     * @js NA
+     * @lua NA
+     */
+    bool initEmpty(Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh);
+
     /** Initializes with a texture2d with data.
      
      @param data Specifies a pointer to the image data in memory.
