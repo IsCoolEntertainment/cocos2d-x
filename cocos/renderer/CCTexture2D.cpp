@@ -110,6 +110,36 @@ namespace {
             0xFFFFFFFF, 0xFFFFFFFF, 8, true, false)),
 #endif
     };
+
+    static void setGLPixelStore
+    (int mipmapsNum, const Texture2D::PixelFormatInfo& info, int width)
+    {
+      //Set the row align only when mipmapsNum == 1 and the data is uncompressed
+      if (mipmapsNum == 1 && !info.compressed)
+        {
+          const unsigned int bytesPerRow(width * info.bpp / 8);
+
+          if(bytesPerRow % 8 == 0)
+            {
+              glPixelStorei(GL_UNPACK_ALIGNMENT, 8);
+            }
+          else if(bytesPerRow % 4 == 0)
+            {
+              glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+            }
+          else if(bytesPerRow % 2 == 0)
+            {
+              glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
+            }
+          else
+            {
+              glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+            }
+        }else
+        {
+          glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        }
+    }
 }
 
 //CLASS IMPLEMENTATIONS:
@@ -555,6 +585,68 @@ bool Texture2D::hasPremultipliedAlpha() const
     return _hasPremultipliedAlpha;
 }
 
+bool Texture2D::initEmpty
+(Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh)
+{
+    auto formatItr = _pixelFormatInfoTables.find(pixelFormat);
+    
+    if(formatItr == _pixelFormatInfoTables.end())
+    {
+        CCLOG
+          ("cocos2d: WARNING: unsupported pixelformat: %lx",
+           (unsigned long)pixelFormat);
+        return false;
+    }
+
+    const PixelFormatInfo& info = formatItr->second;
+    setGLPixelStore(1, info, pixelsWide);
+
+    if(_name != 0)
+      {
+        GL::deleteTexture(_name);
+        _name = 0;
+      }
+
+    glGenTextures(1, &_name);
+    GL::bindTexture2D(_name);
+
+    glTexParameteri
+      (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+       _antialiasEnabled ? GL_LINEAR : GL_NEAREST);
+
+    glTexParameteri
+      ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+        _antialiasEnabled ? GL_LINEAR : GL_NEAREST );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+
+    const GLenum err = glGetError();
+    if (err != GL_NO_ERROR)
+        cocos2d::log
+          ("OpenGL error 0x%04X in %s %s %d\n", err, __FILE__, __FUNCTION__,
+           __LINE__);
+
+    glTexImage2D
+      (GL_TEXTURE_2D, 0, info.internalFormat, pixelsWide, pixelsHigh, 0,
+       info.format, info.type, nullptr);
+    
+    _contentSize = cocos2d::Size(pixelsWide, pixelsHigh);
+    _pixelsWide = pixelsWide;
+    _pixelsHigh = pixelsHigh;
+    _pixelFormat = pixelFormat;
+    _maxS = 1;
+    _maxT = 1;
+
+    _hasPremultipliedAlpha = false;
+    _hasMipmaps = false;
+
+    setGLProgram
+      (GLProgramCache::getInstance()->getGLProgram
+       (GLProgram::SHADER_NAME_POSITION_TEXTURE));
+    
+    return true;
+}
+
 bool Texture2D::initWithData(const void *data, ssize_t dataLen, Texture2D::PixelFormat pixelFormat, int pixelsWide, int pixelsHigh, const Size& contentSize)
 {
     CCASSERT(dataLen>0 && pixelsWide>0 && pixelsHigh>0, "Invalid size");
@@ -580,7 +672,6 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
         return false;
     }
     
-
     auto formatItr = _pixelFormatInfoTables.find(pixelFormat);
     if(formatItr == _pixelFormatInfoTables.end())
     {
@@ -599,37 +690,13 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
         return false;
     }
 
-    //Set the row align only when mipmapsNum == 1 and the data is uncompressed
-    if (mipmapsNum == 1 && !info.compressed)
-    {
-        unsigned int bytesPerRow = contentSize.width * info.bpp / 8;
-
-        if(bytesPerRow % 8 == 0)
-        {
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 8);
-        }
-        else if(bytesPerRow % 4 == 0)
-        {
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-        }
-        else if(bytesPerRow % 2 == 0)
-        {
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
-        }
-        else
-        {
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        }
-    }else
-    {
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    }
-
+    setGLPixelStore(mipmapsNum, info, contentSize.width);
+    
     if(_name != 0)
-    {
+      {
         GL::deleteTexture(_name);
         _name = 0;
-    }
+      }
 
     glGenTextures(1, &_name);
     GL::bindTexture2D(_name);
@@ -681,11 +748,13 @@ bool Texture2D::initWithMipmaps(MipmapInfo* mipmaps, int mipmapsNum, PixelFormat
         }
         else
         {
-            glTexImage2D(GL_TEXTURE_2D, i, info.internalFormat, width, height, 0, info.format, info.type, nullptr);
-            glTexSubImage2D(GL_TEXTURE_2D, i, 0, 0, (GLsizei)contentSize.width, (GLsizei)contentSize.height, info.format, info.type, data);
-
-            if ( ( contentSize.width != width ) || ( contentSize.height != height ) )
+            if ( ( contentSize.width == width ) && ( contentSize.height == height ) )
+                glTexImage2D(GL_TEXTURE_2D, i, info.internalFormat, width, height, 0, info.format, info.type, data);
+            else
             {
+                glTexImage2D(GL_TEXTURE_2D, i, info.internalFormat, width, height, 0, info.format, info.type, nullptr);
+                glTexSubImage2D(GL_TEXTURE_2D, i, 0, 0, (GLsizei)contentSize.width, (GLsizei)contentSize.height, info.format, info.type, data);
+
                 const GLsizei w( width - contentSize.width );
                 const GLsizei h( height - contentSize.height );
 
@@ -738,8 +807,10 @@ bool Texture2D::updateWithData(const void *data,int offsetX,int offsetY,int widt
 {
     if (_name)
     {
-        GL::bindTexture2D(_name);
         const PixelFormatInfo& info = _pixelFormatInfoTables.at(_pixelFormat);
+
+        setGLPixelStore(1, info, width);
+        GL::bindTexture2D(_name);
         glTexSubImage2D(GL_TEXTURE_2D,0,offsetX,offsetY,width,height,info.format, info.type,data);
 
         return true;
