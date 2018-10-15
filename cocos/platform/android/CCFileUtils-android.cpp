@@ -45,8 +45,6 @@ THE SOFTWARE.
 #define  ASSETS_FOLDER_NAME          "assets/"
 #define  ASSETS_FOLDER_NAME_LENGTH   7
 
-using namespace std;
-
 NS_CC_BEGIN
 
 AAssetManager* FileUtilsAndroid::assetmanager = nullptr;
@@ -115,8 +113,8 @@ std::string FileUtilsAndroid::getNewFilename(const std::string &filename) const
     std::vector<std::string> v(3);
     v.resize(0);
     auto change = false;
-    size_t size = newFileName.size();
-    size_t idx = 0;
+    std::size_t size = newFileName.size();
+    std::size_t idx = 0;
     bool noexit = true;
     while (noexit)
     {
@@ -263,7 +261,7 @@ long FileUtilsAndroid::getFileSize(const std::string& filepath)
     
     if (FileUtilsAndroid::assetmanager)
     {
-        string relativePath = filepath;
+        std::string relativePath = filepath;
         if (filepath.find(_defaultResRootPath) == 0)
         {
             relativePath = filepath.substr(_defaultResRootPath.size());
@@ -288,13 +286,13 @@ FileUtils::Status FileUtilsAndroid::getContents(const std::string& filename, Res
     if (filename.empty())
         return FileUtils::Status::NotExists;
 
-    string fullPath = fullPathForFilename(filename);
+    std::string fullPath = fullPathForFilename(filename);
 
     if (fullPath[0] == '/')
         return FileUtils::getContents(fullPath, buffer);
 
-    string relativePath = string();
-    size_t position = fullPath.find(apkprefix);
+    std::string relativePath;
+    std::size_t position = fullPath.find(apkprefix);
     if (0 == position) {
         // "assets/" is at the beginning of the path and we don't want it
         relativePath += fullPath.substr(apkprefix.size());
@@ -334,23 +332,16 @@ FileUtils::Status FileUtilsAndroid::getContents(const std::string& filename, Res
     return FileUtils::Status::OK;
 }
 
-string FileUtilsAndroid::getWritablePath() const
+std::string FileUtilsAndroid::getWritablePath() const
 {
     // Fix for Nexus 10 (Android 4.2 multi-user environment)
     // the path is retrieved through Java Context.getCacheDir() method
-    string dir("");
-    string tmp = JniHelper::callStaticStringMethod("org/cocos2dx/lib/Cocos2dxHelper", "getCocos2dxWritablePath");
+    std::string tmp = JniHelper::callStaticStringMethod("org/cocos2dx/lib/Cocos2dxHelper", "getCocos2dxWritablePath");
 
     if (tmp.length() > 0)
-    {
-        dir.append(tmp).append("/");
-
-        return dir;
-    }
+      return tmp + "/";
     else
-    {
-        return "";
-    }
+      return "";
 }
 
 NS_CC_END
