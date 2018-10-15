@@ -332,6 +332,83 @@ FileUtils::Status FileUtilsAndroid::getContents(const std::string& filename, Res
     return FileUtils::Status::OK;
 }
 
+
+std::string
+FileUtilsAndroid::getUncompressedFilePath(const std::string& filename)
+{
+    EngineDataManager::onBeforeReadFile();
+
+    if (filename.empty())
+        return "";
+    
+    if (nullptr == assetmanager) {
+        LOGD("... FileUtilsAndroid::assetmanager is nullptr");
+        return "";
+    }
+    
+    const std::string fullPath(fullPathForFilename(filename));
+
+    if (fullPath[0] == '/')
+        return fullPath;
+
+    const std::string uncompressed(getWritablePath() + filename);
+
+    {
+        const std::ifstream cached(uncompressed);
+
+        if (cached)
+            return uncompressed;
+    }
+
+    const std::size_t dirseparator(uncompressed.find_last_of( "/\\" ));
+
+    if (dirseparator != std::string::npos) {
+        createDirectory(uncompressed.substr(0, dirseparator));
+    }
+    
+    static const char* apkprefix("assets/");
+    static std::size_t apkprefixsize(std::strlen(apkprefix));
+
+    std::string inputpath;
+
+    if (std::strncmp(fullPath.c_str(), apkprefix, apkprefixsize) == 0)
+        inputpath = fullPath.substr(apkprefixsize);
+    else
+        inputpath = fullPath;
+    
+    AAsset* const asset
+      (AAssetManager_open
+       (assetmanager, inputpath.c_str(), AASSET_MODE_STREAMING));
+    
+    if (nullptr == asset) {
+        LOGD("asset is nullptr");
+        return "";
+    }
+
+    const std::size_t buffersize(4096);
+    char buffer[buffersize];
+    std::ofstream output(uncompressed, std::ios::out | std::ios::binary);
+    
+    while (true) {
+        const int readsize(AAsset_read(asset, buffer, buffersize));
+
+        if (readsize < 0) {
+            LOGD("Failed to read from asset.");
+            AAsset_close(asset);
+            return "";
+        }
+
+        if (readsize == 0)
+          break;
+        
+        output.write(buffer, readsize);
+    };
+
+    AAsset_close(asset);
+
+    return uncompressed;
+}
+
 std::string FileUtilsAndroid::getWritablePath() const
 {
     // Fix for Nexus 10 (Android 4.2 multi-user environment)

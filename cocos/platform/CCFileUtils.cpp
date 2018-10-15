@@ -706,6 +706,11 @@ FileUtils::Status FileUtils::getContents(const std::string& filename, ResizableB
     return Status::OK;
 }
 
+std::string FileUtils::getUncompressedFilePath(const std::string& filename)
+{
+  return fullPathForFilename(filename);
+}
+
 unsigned char* FileUtils::getFileData(const std::string& filename, const char* mode, ssize_t *size)
 {
     CCASSERT(!filename.empty() && size != nullptr && mode != nullptr, "Invalid parameters.");
