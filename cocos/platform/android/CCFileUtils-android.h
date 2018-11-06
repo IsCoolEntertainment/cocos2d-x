@@ -69,7 +69,7 @@ public:
 
     virtual FileUtils::Status getContents(const std::string& filename, ResizableBuffer* buffer) override;
 
-    virtual std::string getUncompressedFilePath(const std::string& filename) override;
+    virtual std::string getUncompressedFilePath(const std::string& filename, const std::string& uncompressed) override;
 
     virtual std::string getWritablePath() const override;
     virtual bool isAbsolutePath(const std::string& strPath) const override;
