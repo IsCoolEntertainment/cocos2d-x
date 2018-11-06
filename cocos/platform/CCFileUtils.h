@@ -288,6 +288,20 @@ public:
     virtual std::string getUncompressedFilePath(const std::string& filename) const;
 
     /**
+     *   Gets the path to an uncompressed version of the given file.
+     *
+     *   If the file is an asset on Android, it is extracted and the path to the
+     *   extracted file is returned. If the extracted file already exists, it
+     *   is not overwritten. Otherwise filename is returned. 
+     *
+     *   @param filename The file to extract.
+     *   @param uncompressed The path to the extracted file.
+     *
+     *   @return The path of the extracted file or an empty string on error.
+     */
+    virtual std::string getUncompressedFilePath(const std::string& filename, const std::string& uncompressed) const;
+
+    /**
      *  Gets resource file data
      *
      *  @param[in]  filename The resource file name which contains the path.

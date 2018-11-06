@@ -404,7 +404,8 @@ FileUtils::Status FileUtilsAndroid::getContents(const std::string& filename, Res
 
 
 std::string
-FileUtilsAndroid::getUncompressedFilePath(const std::string& filename) const
+FileUtilsAndroid::getUncompressedFilePath
+(const std::string& filename, const std::string& uncompressed) const
 {
     if (filename.empty())
         return "";
@@ -418,8 +419,6 @@ FileUtilsAndroid::getUncompressedFilePath(const std::string& filename) const
 
     if (fullPath[0] == '/')
         return fullPath;
-
-    const std::string uncompressed(getWritablePath() + filename);
 
     {
         const std::ifstream cached(uncompressed);

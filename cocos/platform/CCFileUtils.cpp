@@ -713,7 +713,12 @@ FileUtils::Status FileUtils::getContents(const std::string& filename, ResizableB
 
 std::string FileUtils::getUncompressedFilePath(const std::string& filename) const
 {
-  return fullPathForFilename(filename);
+    return getUncompressedFilePath(filename, getWritablePath() + filename);
+}
+
+std::string FileUtils::getUncompressedFilePath(const std::string& filename, const std::string& uncompressed) const
+{
+    return fullPathForFilename(filename);
 }
 
 unsigned char* FileUtils::getFileData(const std::string& filename, const char* mode, ssize_t *size) const
