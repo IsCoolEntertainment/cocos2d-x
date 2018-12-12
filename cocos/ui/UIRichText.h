@@ -559,6 +559,7 @@ protected:
     {
     public:
         UrlTouchListener(Node* parent, std::string url, RichText::OpenUrlHandler handleOpenUrl);
+        UrlTouchListener(const UrlTouchListener& that);
         ~UrlTouchListener();
         void onTouchEnded(Touch* touch) const;
 
