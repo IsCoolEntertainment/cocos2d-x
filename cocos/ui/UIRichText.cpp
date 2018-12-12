@@ -55,10 +55,19 @@ RichText::UrlTouchListener::UrlTouchListener
   , _url(url)
   , _handleOpenUrl(handleOpenUrl)
 {
+  _parent->retain();
+}
+  
+RichText::UrlTouchListener::UrlTouchListener(const UrlTouchListener& that)
+  : UrlTouchListener( that._parent, that._url, that._handleOpenUrl )
+{
 
 }
   
-RichText::UrlTouchListener::~UrlTouchListener() = default;
+RichText::UrlTouchListener::~UrlTouchListener()
+{
+  _parent->release();
+}
 
 void RichText::UrlTouchListener::onTouchEnded(Touch* touch) const
 {
@@ -1337,6 +1346,7 @@ void RichText::formatText()
     {
         this->removeAllProtectedChildren();
         _elementRenders.clear();
+        _urlTouchListeners.clear();
         _lineHeights.clear();
         if (_ignoreSize)
         {
