@@ -354,8 +354,10 @@ public class Cocos2dxSound {
                 if (Cocos2dxHelper.getObbFile() != null) {
                     final AssetFileDescriptor assetFileDescriptor = Cocos2dxHelper.getObbFile().getAssetFileDescriptor(path);
                     soundID = mSoundPool.load(assetFileDescriptor, 0);
+                    assetFileDescriptor.close();
                 } else {
-                    soundID = this.mSoundPool.load(this.mContext.getAssets().openFd(path), 0);
+                    final AssetFileDescriptor assetFileDescriptor = this.mContext.getAssets().openFd(path);
+                    soundID = this.mSoundPool.load(assetFileDescriptor, 0);
                 }
             }
         } catch (final Exception e) {
