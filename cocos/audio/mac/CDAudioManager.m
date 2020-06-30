@@ -247,7 +247,7 @@ static BOOL configured = FALSE;
 
 -(BOOL) audioSessionSetActive:(BOOL) active {
     NSError *activationError = nil;
-    if ([[AVAudioSession sharedInstance] setActive:active error:&activationError]) {
+    if ([[CCAudioSession sharedInstance] setActive:active error:&activationError]) {
         _audioSessionActive = active;
         CDLOGINFO(@"Denshion::CDAudioManager - Audio session set active %i succeeded", active); 
         return YES;
@@ -260,7 +260,7 @@ static BOOL configured = FALSE;
 
 -(BOOL) audioSessionSetCategory:(NSString*) category {
     NSError *categoryError = nil;
-    if ([[AVAudioSession sharedInstance] setCategory:category error:&categoryError]) {
+    if ([[CCAudioSession sharedInstance] setCategory:category error:&categoryError]) {
         CDLOGINFO(@"Denshion::CDAudioManager - Audio session set category %@ succeeded", category); 
         return YES;
     } else {
@@ -405,7 +405,7 @@ static BOOL configured = FALSE;
     if ((self = [super init])) {
         
         //Initialise the audio session 
-        AVAudioSession* session = [AVAudioSession sharedInstance];
+        CCAudioSession* session = [CCAudioSession sharedInstance];
         session.delegate = self;
     
         _mode = mode;
@@ -728,7 +728,7 @@ static BOOL configured = FALSE;
 #if __CC_PLATFORM_IOS >= 40000
 -(void) endInterruptionWithFlags:(NSUInteger)flags {
     CDLOGINFO(@"Denshion::CDAudioManager - interruption ended with flags %i",flags);
-    if (flags == AVAudioSessionInterruptionFlags_ShouldResume) {
+    if (flags == CCAudioSessionInterruptionFlags_ShouldResume) {
         [self audioSessionResumed];
     }    
 }

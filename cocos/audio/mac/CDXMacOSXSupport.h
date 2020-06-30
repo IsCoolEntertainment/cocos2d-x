@@ -24,13 +24,13 @@
 
 /**
  A set of proxy classes to allow iOS audio code to run on MacOS X. CCAudioPlayer is implemented using NSSound.
- AVAudioSession is a "do nothing" class as it isn't really relevant on MacOS X.
+ CCAudioSession is a "do nothing" class as it isn't really relevant on MacOS X.
  
  Limitations:
  CCAudioPlayer numberOfLoops not correctly supported.  Looping is either on or off, can not specify a specific number of loops.
  CCAudioPlayer panning not supported.
  CCAudioPlayer metering not supported.
- AVAudioSession nothing is supported, not applicable to MacOS X.
+ CCAudioSession nothing is supported, not applicable to MacOS X.
  */
 
 #import <Availability.h>
@@ -150,7 +150,7 @@ extern OSStatus AudioSessionGetProperty(UInt32 inID, UInt32 *ioDataSize, void *o
 - (void)audioPlayerBeginInterruption:(CCAudioPlayer *)player;
 
 /* audioPlayerEndInterruption:withFlags: is called when the audio session interruption has ended and this player had been interrupted while playing. */
-/* Currently the only flag is AVAudioSessionInterruptionFlags_ShouldResume. */
+/* Currently the only flag is CCAudioSessionInterruptionFlags_ShouldResume. */
 - (void)audioPlayerEndInterruption:(CCAudioPlayer *)player withFlags:(NSUInteger)flags;
 
 /* audioPlayerEndInterruption: is called when the preferred method, audioPlayerEndInterruption:withFlags:, is not implemented. */
@@ -175,14 +175,14 @@ extern NSString *const AVAudioSessionCategoryPlayAndRecord;
 extern NSString *const AVAudioSessionCategoryAudioProcessing;
 
 enum {
-	AVAudioSessionInterruptionFlags_ShouldResume = 1
+	CCAudioSessionInterruptionFlags_ShouldResume = 1
 };
 
 enum {	
-	AVAudioSessionSetActiveFlags_NotifyOthersOnDeactivation = 1
+	CCAudioSessionSetActiveFlags_NotifyOthersOnDeactivation = 1
 };
 
-@interface AVAudioSession : NSObject {
+@interface CCAudioSession : NSObject {
 	
 	// properties
 	NSString* category;
@@ -221,7 +221,6 @@ enum {
 @property(readonly) NSInteger currentHardwareOutputNumberOfChannels;
 
 @end
-
 
 /* A protocol for delegates of AVAudioSession */
 @protocol AVAudioSessionDelegate <NSObject>
