@@ -156,8 +156,10 @@ public:
          *
          * @param ws The WebSocket object connected.
          * @param error WebSocket::ErrorCode enum,would be ErrorCode::TIME_OUT or ErrorCode::CONNECTION_FAILURE.
+         * @param message A message describing the step that failed.
          */
-        virtual void onError(WebSocket* ws, const ErrorCode& error) = 0;
+        virtual void onError(WebSocket* ws, const ErrorCode& error, const std::string& message) = 0;
+
     };
 
     /**

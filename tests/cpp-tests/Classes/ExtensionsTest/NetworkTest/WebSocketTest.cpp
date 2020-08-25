@@ -248,7 +248,7 @@ void WebSocketTest::onClose(network::WebSocket* ws)
     release();
 }
 
-void WebSocketTest::onError(network::WebSocket* ws, const network::WebSocket::ErrorCode& error)
+void WebSocketTest::onError(network::WebSocket* ws, const network::WebSocket::ErrorCode& error, const std::string& message)
 {
     log("Error was fired, error code: %d", static_cast<int>(error));
     char buf[100] = {0};
@@ -387,7 +387,7 @@ void WebSocketCloseTest::onClose(network::WebSocket* ws)
     CC_SAFE_DELETE(ws);
 }
 
-void WebSocketCloseTest::onError(network::WebSocket* ws, const network::WebSocket::ErrorCode& error)
+void WebSocketCloseTest::onError(network::WebSocket* ws, const network::WebSocket::ErrorCode& error, const std::string& message)
 {
     log("Error was fired, error code: %d", static_cast<int>(error));
 }

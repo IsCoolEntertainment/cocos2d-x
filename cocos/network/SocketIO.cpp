@@ -371,7 +371,7 @@ public:
     virtual void onOpen(WebSocket* ws);
     virtual void onMessage(WebSocket* ws, const WebSocket::Data& data);
     virtual void onClose(WebSocket* ws);
-    virtual void onError(WebSocket* ws, const WebSocket::ErrorCode& error);
+    virtual void onError(WebSocket* ws, const WebSocket::ErrorCode& error, const std::string& message);
 
     void connect();
     void disconnect();
@@ -1035,7 +1035,7 @@ void SIOClientImpl::onClose(WebSocket* /*ws*/)
     }
 }
 
-void SIOClientImpl::onError(WebSocket* /*ws*/, const WebSocket::ErrorCode& error)
+void SIOClientImpl::onError(WebSocket* /*ws*/, const WebSocket::ErrorCode& error, const std::string& /*message*/)
 {
     CCLOGERROR("Websocket error received: %d", static_cast<int>(error));
 }

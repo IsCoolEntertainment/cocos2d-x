@@ -1227,7 +1227,7 @@ int WebSocket::onConnectionError(void* in, ssize_t len)
         else
         {
             CCLOGERROR("WebSocket connection error: %s", error.c_str());
-            _delegate->onError(this, ErrorCode::CONNECTION_FAILURE);
+            _delegate->onError(this, ErrorCode::CONNECTION_FAILURE, error);
         }
     });
 
