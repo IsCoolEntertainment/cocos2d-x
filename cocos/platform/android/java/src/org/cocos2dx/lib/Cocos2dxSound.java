@@ -351,14 +351,13 @@ public class Cocos2dxSound {
             if (path.startsWith("/")) {
                 soundID = this.mSoundPool.load(path, 0);
             } else {
-                if (Cocos2dxHelper.getObbFile() != null) {
-                    final AssetFileDescriptor assetFileDescriptor = Cocos2dxHelper.getObbFile().getAssetFileDescriptor(path);
-                    soundID = mSoundPool.load(assetFileDescriptor, 0);
-                    assetFileDescriptor.close();
-                } else {
-                    final AssetFileDescriptor assetFileDescriptor = this.mContext.getAssets().openFd(path);
-                    soundID = this.mSoundPool.load(assetFileDescriptor, 0);
-                }
+                final AssetFileDescriptor assetFileDescriptor =
+                    Cocos2dxHelper.getObbFile() != null
+                        ? Cocos2dxHelper.getObbFile().getAssetFileDescriptor(path)
+                        : this.mContext.getAssets().openFd(path);
+
+                soundID = this.mSoundPool.load(assetFileDescriptor, 0);
+                assetFileDescriptor.close();
             }
         } catch (final Exception e) {
             soundID = Cocos2dxSound.INVALID_SOUND_ID;
